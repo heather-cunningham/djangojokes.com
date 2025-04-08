@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% block title %}
+  Jokes
+{% endblock %}
+
+{% block main %}
+  <h2>Jokes</h2>
+  <ul class="list-group list-group-flush mb-3">
+    {% for joke in joke_list %}
+      <li class="list-group-item">{{ joke.question }}</li>
+    {% endfor %}
+  </ul>
+  <!-- ABOVE FOR LOOP
+       --------------
+       The double curly braces hold a template variable (or expression) that should be evaluated. 
+       This for loop is the Django template equivalent of:
+       
+          for joke in Joke.objects.all():
+                print(f'\n    <li class="list-group-item">{joke.question}</li>\n') 
+    -->
+{% endblock %}
