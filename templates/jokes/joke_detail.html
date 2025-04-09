@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% block title %}
+  Joke
+{% endblock %}
+
+{% block main %}
+<div class="card border-primary m-auto mb-3 text-center" style="max-width: 30rem">
+  <!-- The template has access to an auto-created variable called "joke" (the lowercase model name),
+    containing the joke object. -->
+  <div class="card-header">{{ joke.question }}</div>
+  <div class="card-body text-primary">
+    <h5 class="card-title">{{ joke.answer }}</h5>
+  </div>
+  <div class="card-footer">
+    <small class="text-muted">
+      Created on: {{ joke.created }}
+      Last updated: {{ joke.updated }}
+    </small>
+  </div>
+</div>
+{% endblock %}

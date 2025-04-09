@@ -1,4 +1,4 @@
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 from .models import Joke
 
 
@@ -14,3 +14,11 @@ class JokeListView(ListView):
     ## And, <model> is the lowercase name of the model. 
     ## So, for JokeListView, Django is looking for the template at: 
     #### `jokes/joke_list.html`
+
+
+class JokeDetailView(DetailView):
+    ## Just like a ListView, a minimal DetailView only requires the model to query.
+    model = Joke
+    ## Default name of the template used by the JokeDetailView: 
+    ## `<app_name>/<model>_detail.html`
+    # e.g.: `jokes/joke_detail.html`
