@@ -1,4 +1,5 @@
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from .models import Joke
 
 
@@ -6,6 +7,19 @@ from .models import Joke
 class JokeCreateView(CreateView):
     model = Joke
     fields = ["question", "answer"]
+
+
+class JokeDeleteView(DeleteView):
+    model = Joke
+    success_url = reverse_lazy("jokes:list")
+
+
+class JokeDetailView(DetailView):
+    ## Just like a ListView, a minimal DetailView only requires the model to query.
+    model = Joke
+    ## Default name of the template used by the JokeDetailView: 
+    ## `<app_name>/<model>_detail.html`
+    # e.g.: `jokes/joke_detail.html`
 
 
 class JokeListView(ListView):
@@ -19,14 +33,6 @@ class JokeListView(ListView):
     ## And, <model> is the lowercase name of the model. 
     ## So, for JokeListView, Django is looking for the template at: 
     #### `jokes/joke_list.html`
-
-
-class JokeDetailView(DetailView):
-    ## Just like a ListView, a minimal DetailView only requires the model to query.
-    model = Joke
-    ## Default name of the template used by the JokeDetailView: 
-    ## `<app_name>/<model>_detail.html`
-    # e.g.: `jokes/joke_detail.html`
 
 
 class JokeUpdateView(UpdateView):
