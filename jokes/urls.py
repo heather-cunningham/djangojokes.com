@@ -16,6 +16,6 @@ urlpatterns = [
     ## Look in .venv\Lib\site-packages\django\views\generic\detail.py 
     # at the get_object() method of the SingleObjectMixin class 
     # to see how this magic works behind the scenes.
-    path("joke/<int:pk>", JokeDetailView.as_view(), name="detail"),
+    path("joke/<int:pk>/", JokeDetailView.as_view(), name="detail"),
     path("joke/<int:pk>/update/", JokeUpdateView.as_view(), name="update"),
 ]
