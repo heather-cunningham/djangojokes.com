@@ -18,10 +18,14 @@ Jokes
        So, the following url tag becomes: `url('joke', joke.pk)`  -->
     <!-- <a id="{{joke.id}}" href="{% url 'jokes:detail' joke.pk %}">{{ joke.question }}</a> -->
     <!-- With passing a ref of `get_absolute_url()` from the `jokes.models.py` for the `href`:  -->
-    <a id="{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
-    <a id="update-joke{{joke.id}}-btn" class="btn btn-info btn-sm float-end me-2" 
+    <a id="joke-{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
+    <a id="update-joke-{{joke.id}}-btn" class="btn btn-info btn-sm float-end me-2" 
       href="{% url 'jokes:update' joke.pk %}">
       Update
+    </a>
+    <a id="delete-joke-{{joke.id}}-btn" class="btn btn-danger btn-sm float-end me-2" 
+    href="{% url 'jokes:delete' joke.pk %}">
+      Delete
     </a>
   </li>
   {% endfor %}

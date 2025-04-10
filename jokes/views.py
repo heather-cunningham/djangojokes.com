@@ -11,7 +11,14 @@ class JokeCreateView(CreateView):
 
 class JokeDeleteView(DeleteView):
     model = Joke
+    ## reverse_lazy() works just like reverse(): 
+    ## It returns the URL based on the passed-in URL pattern name. 
+    # But unlike reverse(), it waits to get the URL until it is needed.
     success_url = reverse_lazy("jokes:list")
+    ## We use reverse_lazy() here because the view is created before the URL configuration.
+    ## So, if you try to use reverse(), you will likely get an error about a circular import. 
+    ## The issue with using reverse() is the view needs the URLConf to have already been created, 
+    # but the URLConf imports the view. So, it cannot be created until the view exists.
 
 
 class JokeDetailView(DetailView):
