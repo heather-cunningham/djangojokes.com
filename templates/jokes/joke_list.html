@@ -1,25 +1,32 @@
 {% extends "_base.html" %}
 
 {% block title %}
-  Jokes
+Jokes
 {% endblock %}
 
 {% block main %}
-  <h1>Jokes</h1>
-  <ul class="list-group list-group-flush mb-3">
-    {% for joke in joke_list %}
-      <li class="list-group-item">
-      <!-- In the url tag below, `joke.pk` holds the primary key for the joke, 
+<a id="add-joke-btn" class="btn btn-success btn-sm float-end" href="{% url 'jokes:create' %}">
+  + New Joke
+</a>
+<h1>Jokes</h1>
+<ul class="list-group list-group-flush mb-3">
+  {% for joke in joke_list %}
+  <li class="list-group-item">
+    <!-- In the url tag below, `joke.pk` holds the primary key for the joke, 
        which it will use to construct the URL. 
        Think of a tag as a fcn with ea. subsequent item being an argument passed to that fcn. 
        So, the following url tag becomes: `url('joke', joke.pk)`  -->
-       <!-- <a id="{{joke.id}}" href="{% url 'jokes:detail' joke.pk %}">{{ joke.question }}</a> -->
-       <!-- With passing a ref of `get_absolute_url()` from the `jokes.models.py` for the `href`:  -->
-       <a id="{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
-      </li>
-    {% endfor %}
-  </ul>
-  <!-- ABOVE FOR LOOP
+    <!-- <a id="{{joke.id}}" href="{% url 'jokes:detail' joke.pk %}">{{ joke.question }}</a> -->
+    <!-- With passing a ref of `get_absolute_url()` from the `jokes.models.py` for the `href`:  -->
+    <a id="{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
+    <a id="update-joke{{joke.id}}-btn" class="btn btn-info btn-sm float-end me-2" 
+      href="{% url 'jokes:update' joke.pk %}">
+      Update
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+<!-- ABOVE FOR LOOP
        --------------
        The double curly braces hold a template variable (or expression) that should be evaluated. 
        This FOR loop is the Django template equivalent of python's:
