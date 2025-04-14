@@ -4,15 +4,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
+
+  {% load static %}
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" 
     rel="stylesheet"
     integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" 
     crossorigin="anonymous" />
+  <link rel="stylesheet" href="{% static 'css/main.css '%}"/>
+  <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
   
-    <!-- ADD FONT AWESOME FROM https://fontawesome.com/ -->
-    <script src="https://kit.fontawesome.com/5edc2e2a09.js" crossorigin="anonymous">
-    </script>
+  <!-- ADD FONT AWESOME FROM https://fontawesome.com/ -->
+  <script src="https://kit.fontawesome.com/5edc2e2a09.js" crossorigin="anonymous">
+  </script>
   
   <title>{% block title %}{% endblock %} | Django Jokes</title>
 </head>
@@ -20,7 +24,10 @@
 <body>
   <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Django Jokes</a>
+      <a class="navbar-brand" href="{% url 'pages:homepage' %}">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid"/>
+      </a>
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-expanded="false" aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -32,11 +39,11 @@
             <a id="home-nav-link" class="nav-link" href="{% url 'pages:homepage' %}">
               Home
             </a> 
-            <!-- <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a> -->
           </li>
           <li class="nav-item">
-            <a id="jokes-nav-link" class="nav-link" href="{% url 'jokes:list' %}">Jokes</a>
-            <!-- <a class="nav-link" href="#">Jokes</a> -->
+            <a id="jokes-nav-link" class="nav-link" href="{% url 'jokes:list' %}">
+              Jokes
+            </a>
           </li>
           <li class="nav-item">
             <a id="about-nav-link" class="nav-link" href="{% url 'pages:about' %}">
@@ -92,5 +99,4 @@
     integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
     crossorigin="anonymous"></script>
 </body>
-
 </html>
