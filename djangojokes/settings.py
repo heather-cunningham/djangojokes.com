@@ -82,9 +82,19 @@ WSGI_APPLICATION = 'djangojokes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jokes',
+        'USER': 'postgres',
+        'PASSWORD': '3l3ph0ntsNeverForget',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
+    ## SQLite db which comes embedded w/ Django by default, 
+    #### but Postgres is the most pop & more robust.
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 }
 
 
