@@ -12,7 +12,7 @@ class JokeAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         ## Don't call its super here b/c overriding the entire super method. 
         if(obj): ## If editing an existing object:
-            return ('created', 'updated')
+            return ('slug', 'created', 'updated')
         return () ## Else rtn an empty tple
     
     
