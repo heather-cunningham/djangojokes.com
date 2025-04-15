@@ -1,7 +1,6 @@
 from django.db import models
-from django.urls import reverse
-## The reverse() function, imported above, gets and returns 
-# the URL based on the passed-in URL pattern name.
+from django.urls import reverse ## Gets and returns the URL based on the passed-in URL pattern name.
+from common.utils.text import create_unique_url_slug
 
 # Create your models here.
 ## BEGIN class

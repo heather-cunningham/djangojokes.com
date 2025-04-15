@@ -3,7 +3,7 @@ import string
 from django.utils.text import slugify
 
 ## For URLs' legs
-def unique_slugs(str1, model, num_chars=50):
+def create_unique_url_slug(str1, model, num_chars=50):
     """
     Return slug of num_chars length unique to model
 
