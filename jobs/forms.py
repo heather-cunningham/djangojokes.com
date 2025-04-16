@@ -62,7 +62,8 @@ class JobApplicationForm(forms.Form):
         widget=forms.SelectDateWidget(years=START_YEARS))
     ## `choices=` takes in any Iterable w/ 2 values, like a Tuple of Tuples, a Dict, a List of Tuples or 
     ## a List of Dicts, ea. el in the Iterable must have two els
-    available_days = forms.MultipleChoiceField(choices=DAYS,
+    available_days = forms.TypedMultipleChoiceField(choices=DAYS,
+        coerce=int(),  ## coerce takes a fcn                                          
         help_text="Select all the days you're available to work.",
         widget=forms.CheckboxSelectMultiple(attrs={'checked': True}))
     desired_hourly_wage = forms.DecimalField(widget=forms.NumberInput(
