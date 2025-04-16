@@ -15,15 +15,44 @@ class JobApplicationForm(forms.Form):
         (4, 'THU'),
         (5, 'FRI')
     )
+    ## These work, too:
+    #  EMPLOYMENT_TYPES = [
+    #     (None, '--Please choose--'),
+    #     ('ft', 'Full-time'),
+    #     ('pt', 'Part-time'),
+    #     ('contract', 'Contract work')
+    # ]
+    # DAYS = [
+    #     (1, 'MON'),
+    #     (2, 'TUE'),
+    #     (3, 'WED'),
+    #     (4, 'THU'),
+    #     (5, 'FRI')
+    # ]
+    ##
+    # EMPLOYMENT_TYPES = {
+    #     'none': '--Please choose--',
+    #     'ft': 'Full-time',
+    #     'pt': 'Part-time',
+    #     'contract': 'Contract work'
+    # }
+    # DAYS = {
+    #     1: 'MON',
+    #     2: 'TUE',
+    #     3: 'WED',
+    #     4: 'THU',
+    #     5: 'FRI'
+    # }
     first_name = forms.CharField()
     last_name = forms.CharField()
     email = forms.EmailField()
     website = forms.URLField(required=False)
-    employment_type = forms.ChoiceField(choices=EMPLOYMENT_TYPES) ## `choices=` takes in a Tuple of Tuples
+    employment_type = forms.ChoiceField(choices=EMPLOYMENT_TYPES)
     start_date = forms.DateField(
         help_text="The earliest date you're available to start."
     )
-    ## `choices=` takes in a Tuple of Tuples, same here
+    ## `choices=` takes in any Iterable w/ 2 values, like a Tuple of Tuples, a Dict, a List of Tuples or 
+    ## a List of Dicts, ea. el in the Iterable must have two els
     available_days = forms.MultipleChoiceField(
         choices=DAYS,
         help_text="Select all the days you're available to work."
