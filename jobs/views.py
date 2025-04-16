@@ -10,8 +10,10 @@ class JobApplicationView(FormView):
     form_class = JobApplicationForm
     success_url = reverse_lazy("jobs:thanks")
 
-
-    def is_form_valid(self, form):
+    ## I don't think I can rename this fcn; I think it's an overridden fcn.
+    ## Hence, the call to super at the end?
+    # @override
+    def form_valid(self, form):
         data = form.cleaned_data
         to = 'cunningham.heatherirene@gmail.com'
         subject = 'Application for Joke Writer'
@@ -24,7 +26,7 @@ class JobApplicationView(FormView):
             content += f'<li>{label}: {entry}</li>'
         content += '</ol>'
         send_email(to, subject, content)
-        return super().is_form_valid(form)
+        return super().form_valid(form)
 ## END JobApplicationView class
 
 
