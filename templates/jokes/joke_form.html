@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 
+{% load crispy_forms_tags %}
 
 {% block title %}
     Add/Update Joke
@@ -12,10 +13,13 @@
     <!-- Within the form element, you must include these 3 items: -->
     {% csrf_token %} <!-- 1. csrf_token template tag – This is a security measure that protects against
      cross site request forgery. -->
-     <table id="joke-form-tbl" class="table">
+    
+    {{ form|crispy }}
+
+     <!-- <table id="joke-form-tbl" class="table">
       {{ form.as_table }} 
-      <!-- 2. A form interpolated variable to output the form fields and their labels.-->
-     </table>
+     2. A form interpolated variable to output the form fields and their labels.
+     </table> -->
     <button id="submit-joke-btn" class="btn btn-success float-end" type="submit">
       Submit
     </button><!-- 3. A submit button -->
