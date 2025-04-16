@@ -1,5 +1,12 @@
 from datetime import datetime
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
+
+
+def validate_future_date(date_value):
+    if (date_value < datetime.now().date()):
+        raise ValidationError(message=f'{date_value} is in the past.', code='past_date')
 
 
 class JobApplicationForm(forms.Form):
@@ -44,22 +51,26 @@ class JobApplicationForm(forms.Form):
         (4, 'THU'),
         (5, 'FRI')
     )
+    START_YEARS = range(datetime.now().year, (datetime.now().year + 2))
+    #
     first_name = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True,}))
     last_name = forms.CharField()
     email = forms.EmailField()
-    website = forms.URLField(required=False,
-        widget=forms.URLInput(
-            attrs={
-                'placeholder': 'https://www.example.com',
-                'size': '50'
-            }
-        )
+    website = forms.CharField(required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': 'https://www.example.com','size': '50'}
+        ),
+        validators=[URLValidator(schemes=['http', 'https'])]
     )
     employment_type = forms.ChoiceField(choices=EMPLOYMENT_TYPES)
-    START_YEARS = range(datetime.now().year, (datetime.now().year + 2))
     ## Django help_text is UGLY!!! U. G. L. Y., Django got no alibi
-    start_date = forms.DateField(help_text="The earliest date you're available to start.",
-        widget=forms.SelectDateWidget(years=START_YEARS))
+    start_date = forms.DateField(help_text="The earliest date you're available to start work.",
+        widget=forms.SelectDateWidget(
+            years=START_YEARS,
+            attrs={'style': 'width: 31%; display: inline-block; margin: 0 1%;'}
+        ),
+        validators=[validate_future_date,],
+        error_messages={'past_date': 'Please, enter a date in the future.'})
     ## `choices=` takes in any Iterable w/ 2 values, like a Tuple of Tuples, a Dict, a List of Tuples or 
     ## a List of Dicts, ea. el in the Iterable must have two els
     available_days = forms.TypedMultipleChoiceField(choices=DAYS,
