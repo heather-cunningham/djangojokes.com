@@ -48,6 +48,7 @@ class JobApplicationForm(forms.Form):
     email = forms.EmailField()
     website = forms.URLField(required=False)
     employment_type = forms.ChoiceField(choices=EMPLOYMENT_TYPES)
+    ## Django help_text is FUGLY!!! U. G. L. Y., Django got no alibi
     start_date = forms.DateField(
         help_text="The earliest date you're available to start."
     )
