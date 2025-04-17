@@ -1,22 +1,45 @@
 {% extends "_base.html" %}
 
 {% block title %}
-  Joke
+Joke
 {% endblock %}
 
 {% block main %}
 <div class="card border-primary m-auto mb-3 text-center" style="max-width: 30rem">
   <!-- The template has access to an auto-created variable called "joke" (the lowercase model name),
     containing the joke object. -->
-  <div class="card-header">{{ joke.question }}</div>
-  <div class="card-body text-primary">
+  <div id="joke-{{joke.id}}-question" class="card-header">
+    {{ joke.question }}
+  </div>
+
+  <div id="joke-{{joke.id}}-punchline" class="card-body text-primary">
     <h5 class="card-title">{{ joke.answer }}</h5>
   </div>
-  <div class="card-footer">
-    <small class="text-muted">
-      Created on: {{ joke.created }}
-      Last updated: {{ joke.updated }}
-    </small>
+
+  <div id="joke-{{joke.id}}-footer" class="card-footer">
+    <div id="joke-{{joke.id}}-cats-tags" class="border-bottom border-faded pb-2">
+      <span id="joke-{{joke.id}}-category">
+        <strong>Category:</strong> {{ joke.category.category }}<br>
+      </span>
+      {% for tag in joke.tags.all %}
+        <span id="joke-{{joke.id}}-tag-{{tag.id}}" 
+          class="badge rounded-pill bg-secondary">{{ tag.tag }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="border-bottom border-faded m-2 pb-2">
+      <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
+        class="btn btn-info btn-sm me-2">Update</a>
+      <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
+        class="btn btn-danger btn-sm me-2">Delete</a>
+    </div>
+
+    
+      <small class="text-muted">
+        <span id="joke-{{joke.id}}-created">Created on: {{ joke.created }}</span>
+        <span id="joke-{{joke.id}}-updated">Last updated: {{ joke.updated }}</span>
+      </small>
+    
   </div>
 </div>
 {% endblock %}

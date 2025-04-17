@@ -8,32 +8,41 @@ Jokes
 <a id="add-joke-btn" class="btn btn-success btn-sm float-end" href="{% url 'jokes:create' %}">
   + New Joke
 </a>
+
 <h1>Jokes</h1>
-<ul class="list-group list-group-flush mb-3">
-  {% for joke in joke_list %}
-  <li class="list-group-item">
-    <!-- With passing a ref of `get_absolute_url()` from the `jokes.models.py` for the `href`:  -->
-    <a id="joke-{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
-    <!-- In the url tag below, think of a tag as a fcn with ea. subsequent item
-      being an argument passed to that fcn. So, the following url tag becomes:
-       `url('joke', joke.slug)`  -->
-    <a id="update-joke-{{joke.id}}-btn" class="btn btn-info btn-sm float-end me-2" 
-      href="{% url 'jokes:update' joke.slug %}">
-      Update
-    </a>
-    <a id="delete-joke-{{joke.id}}-btn" class="btn btn-danger btn-sm float-end me-2" 
-    href="{% url 'jokes:delete' joke.slug %}">
-      Delete
-    </a>
-  </li>
-  {% endfor %}
-</ul>
-<!-- ABOVE FOR LOOP
-       --------------
-       The double curly braces hold a template variable (or expression) that should be evaluated. 
-       This FOR loop is the Django template equivalent of python's:
-       
-          for joke in Joke.objects.all():
-                print(f'\n    <li class="list-group-item">{joke.question}</li>\n') 
-    -->
+
+<div class="table-responsive">
+  <table id="jokes-list-tbl" class="table table-striped" style="min-width: 500px">
+    <thead>
+      <tr>
+        <th>Joke Set Up</th>
+        <th>Category/Tags</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for joke in joke_list %}
+      <tr>
+        <td>
+          <a id="joke-{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
+        </td>
+        <td>
+          <span id="joke-{{joke.id}}-category">{{ joke.category.category }}</span>
+          <br />
+          {% for tag in joke.tags.all %}
+            <span id="joke-{{joke.id}}-tag-{{tag.id}}" 
+              class="badge rounded-pill bg-secondary">{{ tag.tag }}</span>
+          {% endfor %}
+        </td>
+        <td>
+          <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
+            name="Update" alt="Update joke"><i class="fas fa-pencil-alt"></i></a>
+          <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
+            name="Delete" alt="Delete joke"><i class="far fa-trash-alt"></i></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
