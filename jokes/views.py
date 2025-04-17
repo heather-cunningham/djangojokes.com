@@ -7,8 +7,10 @@ from .forms import JokeForm
 # Create your views here.
 class JokeCreateView(CreateView):
     model = Joke
+    ## When using model form, means you can't use fields here.
+    ## You wouldn't  want to anyway, b/c then you can't style these fields.
     # fields = ["question", "answer"]
-    form_class = JokeForm
+    form_class = JokeForm ## Joke Model Form
 
 
 class JokeDeleteView(DeleteView):
