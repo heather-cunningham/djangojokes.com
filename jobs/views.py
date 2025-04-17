@@ -1,17 +1,19 @@
 import html
 from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView
+from django.views.generic import CreateView, TemplateView
 from common.utils.email import send_email
 from .forms import JobApplicationForm
+from .models import Applicant
 
 
-class JobApplicationView(FormView):
-    template_name = "jobs/joke_writer.html"
+# class JobApplicationView(FormView):
+class JobApplicationView(CreateView):
+    model = Applicant
+    # template_name = "jobs/joke_writer.html"
     form_class = JobApplicationForm
     success_url = reverse_lazy("jobs:thanks")
 
-    ## I don't think I can rename this fcn; I think it's an overridden fcn.
-    ## Hence, the call to super at the end?
+    
     # @override
     def form_valid(self, form):
         data = form.cleaned_data
