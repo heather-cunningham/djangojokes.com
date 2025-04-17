@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Joke
+from .models import Category, Joke, Tag
 
 
 # Register your models in the db here.
@@ -24,6 +24,21 @@ class CategoryAdmin(admin.ModelAdmin):
 class JokeAdmin(admin.ModelAdmin):
     model = Joke
     list_display = ['question', 'created', 'updated']
+
+
+    ## @override
+    def get_readonly_fields(self, request, obj=None):
+        if(obj): 
+            return ('slug', 'created', 'updated')
+        return ()    
+## END class JokeAdmin()
+
+
+## BEGIN class
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    model = Joke
+    list_display = ['tag', 'created', 'updated']
 
 
     ## @override
