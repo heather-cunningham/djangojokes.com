@@ -50,24 +50,45 @@
               About
             </a>
           </li>
-          <li class="nav-item">
-            <a id="login-nav-link" class="nav-link" href="{% url 'account_login' %}">
-              Log in
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              Me
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">My Account</a>
-              <a class="dropdown-item" href="#">My Django Jokes</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Log out</a>
-            </div>
-          </li>
+          {% if not user.is_authenticated %}
+            <li class="nav-item">
+              <a id="login-nav-link" class="nav-link" href="{% url 'account_login' %}">
+                Log in
+              </a>
+            </li>
+            <li class="nav-item">
+              <a id="Register-nav-link" class="nav-link" href="{% url 'account_signup' %}">
+                Register
+              </a>
+            </li>
+          {% else %}  
+            <li class="nav-item dropdown">
+              <a id="navbarDropdown" 
+                class="nav-link dropdown-toggle" 
+                href="#"  
+                role="button" 
+                data-bs-toggle="dropdown"
+                aria-haspopup="true" 
+                aria-expanded="false">
+                Me
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">My Account</a>
+                <a class="dropdown-item" href="#">My Django Jokes</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" action="{% url 'account_logout' %}">
+                  {% csrf_token %}
+                  <button id="logout-nav-btn" 
+                    class="btn dropdown-item" 
+                    name="LOG OUT" 
+                    alt="Log out of your account" 
+                    type="submit">Log Out</button>
+                </form>
+              </div>
+            </li>
+          {% endif %} 
         </ul>
+
         <form class="row my-2 my-lg-0 row">
           <input class="form-control me-sm-2 col" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0 me-4 col" type="submit">
@@ -92,11 +113,13 @@
               About
             </a>
           </li>
-          <li class="nav-item">
-            <a id="admin-footer-link" class="nav-link" href="{% url 'admin:index' %}">
-              Admin
-            </a>
-          </li>
+          {% if user.is_authenticated and user.is_staff %}
+            <li class="nav-item">
+              <a id="admin-footer-link" class="nav-link" href="{% url 'admin:index' %}">
+                Admin
+              </a>
+            </li>
+          {% endif %}
           <li class="nav-item">
             <a id="careers-footer-link" class="nav-link" href="{% url 'jobs:app' %}">
               Careers
