@@ -17,9 +17,14 @@ Jokes
       <tr>
         <th>Joke Set Up</th>
         <th>Category/Tags</th>
-        <th>Actions</th>
+        {% if joke.user == user %}
+          <th>Actions</th>
+        {% else %}
+          <th>Created</th>
+        {% endif %}
       </tr>
     </thead>
+
     <tbody>
       {% for joke in joke_list %}
       <tr>
@@ -34,15 +39,34 @@ Jokes
               class="badge rounded-pill bg-secondary">{{ tag.tag }}</span>
           {% endfor %}
         </td>
-        <td>
-          <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
-            name="Update" alt="Update joke"><i class="fas fa-pencil-alt"></i></a>
-          <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
-            name="Delete" alt="Delete joke"><i class="far fa-trash-alt"></i></a>
-        </td>
+        {% if joke.user == user %}
+          <td id="edit-cell">
+            <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
+              name="Update" alt="Update joke">
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+            &nbsp;
+            <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
+              name="Delete" alt="Delete joke">
+              <i class="far fa-trash-alt"></i>
+            </a>
+          </td>
+        {% else %}
+          <td id="created-cell">
+            <span id="joke-{{joke.id}}-createdby"><span class="createdby-label">By:</span> 
+            {{ joke.user.username }}</span>
+            <br />
+            <span id="joke-{{joke.id}}-created"><span class="createdby-label">On:</span> 
+            {{ joke.created|date:'SHORT_DATE_FORMAT' }}</span>
+            <br />
+            <span id="joke-{{joke.id}}-updated"><span class="createdby-label">Updated:</span><br/> 
+            {{ joke.updated|date:'SHORT_DATE_FORMAT' }}</span>
+          </td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>
+
   </table>
 </div>
 {% endblock %}

@@ -26,3 +26,15 @@ label, legend {
   font-weight: normal;
   margin: 0 1rem;
 }
+
+td#created-cell {
+  font-size: 0.85rem;
+}
+
+td#edit-cell a {
+  text-decoration: none;
+}
+
+.createdby-label {
+  font-weight: bold;
+}
