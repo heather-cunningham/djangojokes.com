@@ -37,6 +37,8 @@ Joke
     
       <small class="text-muted">
         <span id="joke-{{joke.id}}-created">Created on: {{ joke.created }}</span>
+        <span id="joke-{{joke.id}}-createdby">by {{ joke.user.username }}</span>
+        <br />
         <span id="joke-{{joke.id}}-updated">Last updated: {{ joke.updated }}</span>
       </small>
     

@@ -1,8 +1,9 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse ## Gets and returns the URL based on the passed-in URL pattern name.
 from common.utils.text import create_unique_url_slug
 
-# Create your models here.
+
 ## BEGIN class
 class Joke(models.Model):
     question = models.TextField(max_length=200)
@@ -16,6 +17,7 @@ class Joke(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=50, unique=True, null=False, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
 
     ## @override -- Python doesn't have this decorator
