@@ -14,6 +14,13 @@
     <form id="register-form" method="post" class="m-auto mb-2">
       {% csrf_token %}
       {{ form|crispy }}
+       
+       <!-- form.first_name|as_crispy_field 
+       form.last_name|as_crispy_field 
+       form.password1|as_crispy_field 
+      <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+       form.password2|as_crispy_field  -->
+
       <button id="register-btn" 
         class="form-control btn btn-primary" 
         type="submit" 

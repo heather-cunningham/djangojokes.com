@@ -171,6 +171,10 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "account_login" # Default: '/'
 ACCOUNT_USERNAME_REQUIRED = False  # Default: True
 
 
+# ACCOUNT_SIGNUP_FORM_CLASS = "users.forms.MySignupForm"
+ACCOUNT_FORMS = {"signup": "users.forms.MySignupForm"}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
