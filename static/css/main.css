@@ -16,8 +16,9 @@ header {
 }
 
 /* FORM STYLES */
-label {
+label, legend {
   font-variant: small-caps;
+  font-size: 1rem;
 }
 
 .form-check {

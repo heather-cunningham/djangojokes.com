@@ -40,7 +40,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     ## subclass
     class Meta:
-        BIRTH_YEAR_CHOICES = range((datetime.now().year - 111), datetime.now().year + 1)
+        BIRTH_YEAR_CHOICES = range((datetime.now().year - 110), datetime.now().year + 1)
         model = get_user_model()
         fields = ('email', 'username', 'first_name', 'last_name', 'dob')
         widgets = {
