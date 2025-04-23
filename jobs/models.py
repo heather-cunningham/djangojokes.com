@@ -9,12 +9,14 @@ from django.core.validators import URLValidator
 def validate_future_date(date_value):
     if (date_value < datetime.now().date()):
         raise ValidationError(message=f'{date_value} is in the past.', code='past_date')
+    return
 
 
 def validate_pdf(value):
     kind = filetype.guess(value)
     if (not kind or kind.mime != 'application/pdf'):
         raise ValidationError("Not a PDF file")
+    return
 
 
 ## BEGIN class
