@@ -93,7 +93,7 @@ class JokeUpdateView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Joke
     # fields = ["question", "answer"]
     form_class = JokeForm
-    success_message = "Update Successful"
+    success_message = "Joke updated successfully."
 
 
     ## @override
