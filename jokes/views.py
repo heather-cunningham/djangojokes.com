@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from .models import Joke
@@ -6,12 +7,13 @@ from .forms import JokeForm
 
 
 ## BEGIN
-class JokeCreateView(LoginRequiredMixin, CreateView):
+class JokeCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Joke
     ## When using model form, means you can't use fields here.
     ## You wouldn't  want to anyway, b/c then you can't style these fields.
     # fields = ["question", "answer"]
     form_class = JokeForm ## Joke Model Form
+    success_message = "Joke created successfully."
 
 
     ## @override
@@ -87,10 +89,12 @@ class JokeListView(ListView):
 
 
 ## BEGIN
-class JokeUpdateView(UserPassesTestMixin, UpdateView):
+class JokeUpdateView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
     model = Joke
     # fields = ["question", "answer"]
     form_class = JokeForm
+    success_message = "Update Successful"
+
 
     ## @override
     def test_func(self):
