@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -47,6 +48,18 @@ class JokeDeleteView(UserPassesTestMixin, DeleteView):
         """ Returns True if and only if the logged-in user is the user who created the joke. """
         obj = self.get_object()
         return self.request.user == obj.user
+    
+
+    ## @override
+    def delete(self, request, *args, **kwargs):
+        result = super().delete(request, *args, **kwargs)
+        return result
+
+
+    ## @override
+    def form_valid(self, form):
+        messages.success(self.request, 'Joke deleted.')
+        return super().form_valid(form)
 ## END class
 
 
