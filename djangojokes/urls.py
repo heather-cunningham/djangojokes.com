@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
@@ -14,7 +16,10 @@ urlpatterns = [
     path("jobs/", include("jobs.urls")),
     path("jokes/", include("jokes.urls")),
     path("", include("pages.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+## The static() fcn, above, is a helper fcn that only works when settings.DEBUG is set to True. 
+## So, you don’t have to worry about removing this code when deploying to production. 
+## It'll be ignored.
 
 
 ## I want to keep these notes.
