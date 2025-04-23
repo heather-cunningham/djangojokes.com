@@ -104,7 +104,20 @@
   </header>
 
   <main class="m-4 pb-5">
-    {% block main %}<h2>Welcome!</h2>{% endblock %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <div class="alert message{{ message.tags }} alert-dismissable" role="alert">
+          <b>{{ message }}</b>
+          <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    
+    {% block main %}
+      <h2>Welcome!</h2>
+    {% endblock %}
   </main>
 
   <footer class="fixed-bottom bg-light row">
