@@ -17,6 +17,7 @@ class AboutPageView(TemplateView):
     template_name = 'pages/about.html'
 
 ## EXAMPLE of using Msgs in a View.  You still need the HTML in a template, too.
+    ## @override
     # def get(self, request, *args, **kwargs):
     #     messages.debug(request, 'Debug message.') ## The str is the msg output.
     #     messages.info(request, 'Info message.')
