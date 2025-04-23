@@ -17,7 +17,7 @@ Jokes
       <tr>
         <th>Joke Set Up</th>
         <th>Category/Tags</th>
-        {% if joke.user == user %}
+        {% if joke and joke.user == user %}
           <th>Actions</th>
         {% else %}
           <th>Created</th>
