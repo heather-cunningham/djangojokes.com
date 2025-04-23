@@ -16,12 +16,12 @@ class HomePageView(TemplateView):
 class AboutPageView(TemplateView):
     template_name = 'pages/about.html'
 
-
-    def get(self, request, *args, **kwargs):
-        messages.debug(request, 'Debug message.')
-        messages.info(request, 'Info message.')
-        messages.success(request, 'Success message.')
-        messages.warning(request, 'Warning message.')
-        messages.error(request, 'Error message.')
-        return super().get(request, args, kwargs)
+## EXAMPLE of using Msgs in a View.  You still need the HTML in a template, too.
+    # def get(self, request, *args, **kwargs):
+    #     messages.debug(request, 'Debug message.') ## The str is the msg output.
+    #     messages.info(request, 'Info message.')
+    #     messages.success(request, 'Success message.')
+    #     messages.warning(request, 'Warning message.')
+    #     messages.error(request, 'Error message.')
+    #     return super().get(request, args, kwargs)
 ## END class
