@@ -70,6 +70,19 @@ class JokeListView(ListView):
     ## And, <model> is the lowercase name of the model. 
     ## So, for JokeListView, Django is looking for the template at: 
     #### `jokes/joke_list.html`
+
+
+    ## @override
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Check if the user is authenticated:
+        if (self.request.user.is_authenticated):
+            # Add the first joke related to the current user
+            context['joke'] = self.model.objects.filter(user=self.request.user).first()
+        else:
+            context['joke'] = None
+        context['user'] = self.request.user
+        return context
 ## END class
 
 
