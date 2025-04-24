@@ -38,6 +38,12 @@ Joke
 
     
       <small class="text-muted">
+        {% if joke.user.avatar %}
+          <img id="author-avatar-pic" src="{{ joke.user.avatar.url }}" class="mt-1 rounded float-end" 
+            alt="Author's avatar or profile picture"/>
+        {% endif %}
+
+
         <span id="joke-{{joke.id}}-created"><span class="createdby-label">Created on: </span>
           {{ joke.created }}</span>
         <br />
