@@ -10,7 +10,7 @@ def validate_avatar(img):
     width, height = get_image_dimensions(img)
     if(width > 200 or height > 200):
         raise ValidationError("Avatar/profile pic may be no larger than 200 x 200 pixels.")
-    return
+    return  ## Former college prof convention to mark the end of the methods in Python 
 
 
 ## BEGIN 

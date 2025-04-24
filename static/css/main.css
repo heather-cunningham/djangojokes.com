@@ -38,6 +38,11 @@ td#edit-cell a {
 .createdby-label {
   font-weight: bold;
 }
+
+#author-avatar-pic {
+  width: 4rem; 
+  height: 4rem;
+}
 /* end FORM STYLES */
 
 

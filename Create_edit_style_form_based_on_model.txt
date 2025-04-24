@@ -1,0 +1,32 @@
+If django.views.generic.edit.FormView is a generic editing view for creating a form not based on a model, 
+how does a form based on a model differ?  
+How do you create, edit, and style a form based on a model, like our Joke creation form?
+
+
+
+Model-based forms in Django are created using ModelForm, which automatically generates form fields based on a Django model. This is different from forms using FormView, where you define each form field manually.
+
+To create a form based on a model, follow these steps:
+
+-- Import forms and your model.
+-- Create a class inheriting from forms.ModelForm.
+-- Define an inner Meta class within it, specifying the model it corresponds to and optionally the fields to include or exclude.
+
+Example:
+
+	from django import forms
+	from .models import Joke
+
+	class JokeForm(forms.ModelForm):
+		class Meta:
+			model = Joke
+			fields = ['content', 'author']  # Specify fields to include
+		
+You can style forms using Django's form rendering options or by customizing the HTML templates where you render the form. 
+Django forms use classes that make them compatible with many CSS frameworks, such as Bootstrap.
+
+If this answers your question, feel free to complete this conversation. If not, a trainer will get back to you within one business day!
+
+Best,
+
+WebuBot
