@@ -197,7 +197,17 @@ class JokeVote(models.Model):
 
     ## subclass
     class Meta:
+        ## UniqueConstraint must take a fields argument listing the fields that must be unique together, 
+        # and a name argument, which will be output in the error message when this constraint is violated.
         constraints = [
             models.UniqueConstraint(fields=['user', 'joke'], name='one_vote_per_user_per_joke'),
         ]
+
+        ## CheckConstraint takes a check argument with a Q object. Any content failing to pass the tests
+        #  in the Q object will be rejected. For example, if you wanted to prevent this author from creating
+        #  an account on your site, you could use the following constraint.
+        ## As of Django 3.1, CheckConstraint can also take a boolean Expression. See docs.
+        # constraints = [
+        #     models.CheckConstraint(check=~Q(first_name='Nat') & ~Q(last_name='Dunn'), name='no_nat_dunn'),
+        # ]
 ## END class JokeVote()
