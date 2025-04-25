@@ -1,12 +1,15 @@
+import json
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-from .models import Joke
+from .models import Joke, JokeVote
 from .forms import JokeForm
 
-
+## These are class based Views
+## ------------------------------
 ## BEGIN
 class JokeCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Joke
@@ -114,3 +117,66 @@ class JokeUpdateView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
         obj = self.get_object()
         return self.request.user == obj.user
 ## END class
+## END class based Views
+## ------------------------------------------------------------------------------
+
+
+## Functional Views aka View fcns
+## ------------------------------------------------------------------------------
+## We are using a fcnl View here so we can use JS and AJAX
+# to send data back and forth from the client side to the server-side
+# w/o a web page refresh
+def vote(request, slug):
+    """ Vote like or dislike on a Joke AJAX
+     params: `request` (web request) - w/ the body property containing the stringified JSON data
+             `slug` (str) - The joke slug, which is passed in from a URL pattern in the URLConf              
+    """
+    user = request.user # The logged-in user (or AnonymousUser).
+    joke = Joke.objects.get(slug=slug) # The joke instance.
+    data = json.loads(request.body) # Data from the JavaScript.
+    # Set simple variables.
+    vote = data['vote'] # The user's new vote.
+    likes = data['likes'] # The number of likes currently displayed on page.
+    dislikes = data['dislikes'] # The number of dislikes currently displayed.
+
+    if (user.is_anonymous): # User not logged in. Can't vote.
+        msg = 'Sorry, you have to be logged in to vote.'
+    else: # User is logged in.
+        if (JokeVote.objects.filter(user=user, joke=joke).exists()):
+            # User already voted. Get user's past vote:
+            joke_vote = JokeVote.objects.get(user=user, joke=joke)
+
+            if (joke_vote.vote == vote): # User's new vote is the same as old vote.
+                msg = 'Right. You told us already. Geez.'
+            else: # User changed vote.
+                joke_vote.vote = vote # Update JokeVote instance.
+                joke_vote.save() # Save.
+
+                # Set data to return to the browser.
+                if (vote == -1):
+                    likes -= 1
+                    dislikes += 1
+                    msg = "Don't like it after all, huh? OK. Noted."
+                else:
+                    likes += 1
+                    dislikes -= 1
+                    msg = 'Grown on you, has it? OK. Noted.'
+        else: # First time user is voting on this joke.
+            # Create and save new vote.
+            joke_vote = JokeVote(user=user, joke=joke, vote=vote)
+            joke_vote.save()
+
+            # Set data to return to the browser.
+            if (vote == -1):
+                dislikes += 1
+                msg = "Sorry you didn't like the joke."
+            else:
+                likes += 1
+                msg = "Yeah, good one, right?"
+    # Create a response object and send it back to the browser as JSON.
+    response = {
+        'msg': msg,
+        'likes': likes,
+        'dislikes': dislikes
+    }
+    return JsonResponse(response) # Return object as JSON.
