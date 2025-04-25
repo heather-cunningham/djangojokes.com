@@ -4,6 +4,57 @@ from django.urls import reverse ## Gets and returns the URL based on the passed-
 from common.utils.text import create_unique_url_slug
 
 
+## Model Manager(s)
+##------------------- 
+## Models have "managers". Thru those "managers", you create `QuerySet`(s). 
+# The manager is held in the model class’s `objects` attribute.
+## To get the "managers":
+##-----------------------
+# `from <app/dir/project>.models import <classname>
+# manager = <classname>.objects`    
+#
+# Main "Manager" main Methods: 
+##------------------------------
+## 1. all() – Retrieves all the objects in the model class. It is the equivalent of a SQL SELECT statement 
+# with no WHERE clause.
+#
+## 2. filter(**kwargs) – Retrieves objects in the model class meeting the conditions specified in the kwargs. 
+# Generally, it is the equivalent of a SQL SELECT statement with a WHERE clause.
+#
+## 3. exclude(**kwargs) – Like filter(), except that it retrieves all objects NOT matching the conditions
+#  specified in kwargs. It is analogous to a SQL SELECT statement with a WHERE NOT (…) clause.
+#
+## 4. get(**kwargs) – Retrieves one and only one object -- a single model instance (not a QuerySet). 
+#  If no object is found matching the conditions specified in the kwargs, it'll raise a DoesNotExist exception. 
+#  If more than one object matches the conditions, it'll raise a MultipleObjectsReturned exception.
+# 
+## Vocab term: "lookups" - The kwargs passed to filter(), exclude(), and get() are called "lookups". 
+# In lookups, dots are not used to connect reference fields of related models (i.e., DON'T DO user.username). 
+# Instead, a DOUBLE underscore (__) is used, (i.e., DO user__username)  LAME! Django, LAME!!!!
+#-------------------------------------------------------------------
+## THREE **Gotchas with related_name and Backward/Reverse Relationships in LOOKUPS:
+#---------------------------------------------------------------------------------
+# 1. If you have used related_name, then you should use that related_name value in the “reverse” relationship.
+# 2. If you have not used related_name, then you should use the lowercase name of the model
+#  in the “reverse” relationship
+# 3. CAVEAT: When two foreign keys point to the same model, they cannot both have the same related_name.
+#
+# LOOKUP Examples
+## Ex 1: All Jokes by Nat Dunn:
+#-------------------------------
+# Joke.objects.filter(user__username='ndunn')
+## -- OR --
+# Joke.objects.filter(user__first_name='Nat', user__last_name='Dunn')
+#
+## Ex 2: The Category of a Joke by question w/ related name
+#------------------------------------------------------------
+# `Category.objects.get(jokes__question='What do you call a polar bear in the desert?')``
+#
+## Ex 3: The User of a Joke by question w/o related name
+#--------------------------------------------------------
+# `User.objects.get(joke__question='What do you call a polar bear in the desert?')``
+
+
 ## BEGIN class
 class Joke(models.Model):
     question = models.TextField(max_length=200)
@@ -12,12 +63,17 @@ class Joke(models.Model):
     #### quotation marks, meaning that Django sees the reference, 
     #### and says “I’ll do that later, after I find the Category model.”
     ## Or, you could reverse the order of these classes in this file.
-    category = models.ForeignKey('Category', on_delete=models.PROTECT)
-    tags = models.ManyToManyField('Tag', blank=True) ## Lazy ref/load again 
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='jokes')
+    ## Above and below `related_name='jokes'` renames the related manager `joke_set` to `jokes`.
+    tags = models.ManyToManyField('Tag', blank=True, related_name='jokes')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=50, unique=True, null=False, editable=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    ## user FK w/o a related name, like would use above in Ex 3
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    #
+    ### user FK w/ a related name, like would use above in Ex 2
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='jokes')
 
 
     ## @override -- Python doesn't have this decorator
