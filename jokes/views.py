@@ -1,5 +1,6 @@
 import json
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -129,8 +130,7 @@ class JokeUpdateView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 ## If you are handling non-authenticated users client-side, you no longer have to give them access to the vote method
 #  at all. You can add the @login_required decorator to the vote function (or any view function) to make the view 
 # only accessible to logged-in users:
-#
-# @login_required -- NO WORKY, NOT RECOGNIZED, is it deprecated?
+@login_required
 def vote(request, slug):
     """ Vote like or dislike on a Joke AJAX
      params: `request` (web HTTP request obj) - w/ the body property containing the stringified JSON data
