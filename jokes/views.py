@@ -147,7 +147,7 @@ def vote(request, slug):
             joke_vote = JokeVote.objects.get(user=user, joke=joke)
 
             if (joke_vote.vote == vote): # User's new vote is the same as old vote.
-                msg = 'Right. You told us already. Geez.'
+                msg = 'Right. You told us already.'
             else: # User changed vote.
                 joke_vote.vote = vote # Update JokeVote instance.
                 joke_vote.save() # Save.

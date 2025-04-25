@@ -1,7 +1,20 @@
 {% extends "_base.html" %}
+{% load static %}
+
+{% block javascript %}
+<!-- Sets the ajaxURL constant used in jokes.js. This var is set in the template so you can get
+  a dynamic URL based on the slug of the Joke instance. -->
+  <script>
+    const ajaxURL = "{% url 'jokes:ajax-vote' joke.slug %}";
+  </script>
+<!-- Uses the `static` Django template tag to get the path to js/jokes.js, 
+ but it only works if static dir has been loaded like a lib or pkg.  
+ See Django template load tag above. -->
+  <script src="{% static 'js/jokes.js' %}"></script>
+{% endblock %}
 
 {% block title %}
-Joke
+  Joke
 {% endblock %}
 
 {% block main %}
@@ -27,15 +40,34 @@ Joke
       {% endfor %}
     </div>
 
-    {% if joke.user == user %}
+    
       <div class="border-bottom border-faded m-2 pb-2">
-        <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
-          class="btn btn-info btn-sm me-2">Update</a>
-        <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
-          class="btn btn-danger btn-sm me-2">Delete</a>
-      </div>
-    {% endif %}
+        {% if joke.user == user %}
+          <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
+            class="btn btn-info btn-sm me-2">Update</a>
+          <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
+            class="btn btn-danger btn-sm me-2">Delete</a>
 
+          <p>
+            Your joke has <span id="num-votes">{{ joke.num_votes|default:'no' }} vote{{ joke.num_votes|pluralize }}.</span>
+            {% if joke.num_votes %}
+              It has <span id="likes">{{ joke.num_likes }} like{{ joke.num_likes|pluralize }}</span> and
+              <span id="dislikes">{{ joke.num_dislikes }} dislike{{ joke.num_dislikes|pluralize }}.</span>
+            {% endif %}
+          </p>
+        {% else %}
+          {% csrf_token %}
+          <button id="dislike-button" class="btn btn-light" type="button">
+            <i class="fas fa-thumbs-down fa-2x text-danger mx-3"></i><span id="dislikes">{{ joke.num_dislikes }}</span>
+          </button>
+          <button id="like-button" class="btn btn-light" type="button">
+            <i class="fas fa-thumbs-up fa-2x text-success mx-3"></i><span id="likes">{{ joke.num_likes }}</span>
+          </button>
+
+          <div id="output" class="text-info"></div>
+          <span id="num-votes">{{ joke.num_votes }} vote{{ joke.num_votes|pluralize }}</span>
+        {% endif %}
+      </div>
     
       <small class="text-muted">
         <span id="joke-{{joke.id}}-created"><span class="createdby-label">Created on: </span>
