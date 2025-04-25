@@ -128,7 +128,7 @@ class JokeUpdateView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 # w/o a web page refresh
 def vote(request, slug):
     """ Vote like or dislike on a Joke AJAX
-     params: `request` (web request) - w/ the body property containing the stringified JSON data
+     params: `request` (web HTTP request obj) - w/ the body property containing the stringified JSON data
              `slug` (str) - The joke slug, which is passed in from a URL pattern in the URLConf              
     """
     user = request.user # The logged-in user (or AnonymousUser).
@@ -179,4 +179,4 @@ def vote(request, slug):
         'likes': likes,
         'dislikes': dislikes
     }
-    return JsonResponse(response) # Return object as JSON.
+    return JsonResponse(response) # Return object as JSON back to the JS fcns as data response
