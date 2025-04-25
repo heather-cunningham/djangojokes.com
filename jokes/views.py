@@ -126,6 +126,11 @@ class JokeUpdateView(SuccessMessageMixin, UserPassesTestMixin, UpdateView):
 ## We are using a fcnl View here so we can use JS and AJAX
 # to send data back and forth from the client side to the server-side
 # w/o a web page refresh
+## If you are handling non-authenticated users client-side, you no longer have to give them access to the vote method
+#  at all. You can add the @login_required decorator to the vote function (or any view function) to make the view 
+# only accessible to logged-in users:
+#
+# @login_required -- NO WORKY, NOT RECOGNIZED, is it deprecated?
 def vote(request, slug):
     """ Vote like or dislike on a Joke AJAX
      params: `request` (web HTTP request obj) - w/ the body property containing the stringified JSON data

@@ -2,10 +2,11 @@
 {% load static %}
 
 {% block javascript %}
-<!-- Sets the ajaxURL constant used in jokes.js. This var is set in the template so you can get
+<!-- Sets constants used in jokes.js. These vars are set in the template so you can get
   a dynamic URL based on the slug of the Joke instance. -->
   <script>
     const ajaxURL = "{% url 'jokes:ajax-vote' joke.slug %}";
+    // const isAuthenticated = {{ user.is_authenticated|lower }};
   </script>
 <!-- Uses the `static` Django template tag to get the path to js/jokes.js, 
  but it only works if static dir has been loaded like a lib or pkg.  
