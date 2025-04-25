@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (JokeCreateView, JokeDeleteView, JokeDetailView, JokeListView, 
-                    JokeUpdateView)
+                    JokeUpdateView, vote)
 ## Parens above are just to show how to split imports across multiple lines
 
 
@@ -16,4 +16,7 @@ urlpatterns = [
     path("joke/<slug>/delete/", JokeDeleteView.as_view(), name="delete"),
     path("joke/<slug>/update/", JokeUpdateView.as_view(), name="update"),
     path("joke/<slug>/", JokeDetailView.as_view(), name="detail"),
+    ## When a URL matching this pattern, below, is requested, 
+    # the vote() View fcn will be called and passed the slug from the URL.
+    path('joke/<slug>/vote/', vote, name='ajax-vote'),
 ]
