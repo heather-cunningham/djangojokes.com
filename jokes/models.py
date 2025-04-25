@@ -168,7 +168,8 @@ class Tag(models.Model):
 ## END class Tag()
 
 
-## BEGIN class
+## BEGIN class -- Custom Intermediary or JOIN class to create a JOIN tbl w/ more fields/cols than just what 
+# you would get w/ a models.ManyToManyField() [i.e.: table1Obj_id, table2Obj_id]  call to create a JOIN tbl
 class JokeVote(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='jokevotes')
     joke = models.ForeignKey(Joke, on_delete=models.CASCADE, related_name='jokevotes')
