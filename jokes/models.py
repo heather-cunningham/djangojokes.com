@@ -86,12 +86,12 @@ class Joke(models.Model):
 
     @property
     def num_likes(self):
-        return self.jokevotes.filter(vote=1).count()
+        return self.jokevotes.filter(vote=1).count() ## 1 == True or Yes or Like
 
 
     @property
     def num_dislikes(self):
-        return self.jokevotes.filter(vote=-1).count()
+        return self.jokevotes.filter(vote=-1).count() ## 2 == False or No or Dislike 
 
 
     ## @override -- Python doesn't have this decorator
