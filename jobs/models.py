@@ -3,7 +3,10 @@ from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
-from private_storage.fields import PrivateFileField
+from private_storage.fields import PrivateFileField 
+# ## Switched to Cloud AWS storage, instead of this
+## local storage
+# from djangojokes.storage_backends import PrivateMediaStorage
 
 
 ## helper fcns/ Validators
@@ -58,6 +61,9 @@ class Applicant(models.Model):
     ##### is now set in settings.py.
     resume = PrivateFileField(upload_to="resumes", blank=True, help_text="PDFs only, please.", 
                               validators=[validate_pdf])
+    ## Above switched from local private storage to AWS S3 Cloud storage:
+    # resume = models.FileField(storage=PrivateMediaStorage(), upload_to="resumes", blank=True, 
+    #                           help_text="PDFs only, please.", validators=[validate_pdf])  
     confirmation = models.BooleanField()
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)

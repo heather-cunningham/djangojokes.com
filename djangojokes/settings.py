@@ -191,14 +191,36 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+## CLOUD AWS S3 File storage settings
+## -----------------------------------
+# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = 'django-jokes-aws-s3-bucket' # YOUR BUCKET NAME
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+# AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_DEFAULT_ACL = None # Use S3 bucket's setting
+
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# AWS_S3_REGION_NAME = 'us-east-1'  # REPLACE WITH YOUR BUCKET REGION
+# # AWS_S3_REGION_NAME = "US East (N. Virginia) us-east-1"
+
+# STATIC_ROOT = BASE_DIR / 'staticfiles' ## Fallback to local storage if S3 cloud no worky
+# STATICFILES_STORAGE = 'djangojokes.storage_backends.StaticStorage' ## Dflt = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# DEFAULT_FILE_STORAGE = 'djangojokes.storage_backends.PublicMediaStorage' ## Dflt = 'django.core.files.storage.FileSystemStorage'
+# PRIVATE_FILE_STORAGE = 'djangojokes.storage_backends.PrivateMediaStorage' ## not a built-in Django setting
+
+# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+# MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / 'static', 
 ]
+## Do NOT delete the above because it's from where the static files are collected, 
+## not where they are stored.
 
-
-# File storage settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # private-storage settings
