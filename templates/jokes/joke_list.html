@@ -70,7 +70,9 @@ Jokes
   </table>
 </div>
 
-<nav id="joke-list-page-{{ page_obj.number }}" aria-label="pagination">
+{% include 'includes/pagination.html' %}
+
+<!-- <nav id="joke-list-page-{{ page_obj.number }}" aria-label="pagination">
   <ul class="pagination justify-content-center">
     {% if page_obj.has_previous %}
       <li class="page-item"><a class="page-link" href="?page=1">&laquo; 1…</a></li>
@@ -98,5 +100,5 @@ Jokes
       </li>
     {% endif %}
   </ul>
-</nav>
+</nav> -->
 {% endblock %}
