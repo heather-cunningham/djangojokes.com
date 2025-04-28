@@ -101,6 +101,11 @@ class JokeListView(ListView):
         ## page_obj.next_page_number –The number of the next page.
         ## page_obj.number – The current page number.
         ## page_obj.paginator.num_pages – The total number of pages.
+    #
+    ## You can control the ordering of ListViews using the ordering attribute.
+    ## Prepend w/ a minus sign for descending order.  Ascending order is the default.
+    ## Works great if you always want to sort in the same way, but not if you want dynamic sorting.
+    ordering = ['-question']
 
 
     ## @override
