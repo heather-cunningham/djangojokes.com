@@ -106,14 +106,42 @@ class JokeListView(ListView):
     ## Prepend w/ a minus sign for descending order.  Ascending order is the default.
     ## Works great if you always want to sort in the same way, but not if you want dynamic sorting.
     # ordering = ['-question']
+
+
+    def get_order_fields(self):
+        """ Returns a dictionary mapping friendly names to field names and lookups.
+        """
+        return {
+            'joke': 'question',
+            'category': 'category__category',
+            'creator': 'user__username',
+            'created': 'created',
+            'updated': 'updated',
+            'default_key': 'updated' ## the default field to order by if order_key is either unspecified or invalid
+        }
     
 
+    def get_order_settings(self):
+        order_fields = self.get_order_fields()
+        default_order_key = order_fields['default_key']
+        order_key = self.request.GET.get('order', default_order_key)
+        direction = self.request.GET.get('direction', 'desc')
+        # If order_key is invalid, use default
+        if (order_key not in order_fields):
+            order_key = default_order_key
+        return (order_fields, order_key, direction)
     
+
     ## For Dynamic Ordering: Use the get_ordering() method of ListViews
     # It makes it possible to change the ordering based on values passed in over the querystring:
     def get_ordering(self):
-        # default ordering will be '-updated'
-        ordering = self.request.GET.get('order', '-updated')
+        ## Default ordering will be '-updated'
+        # ordering = self.request.GET.get('order', '-updated')
+        order_fields, order_key, direction = self.get_order_settings()
+        ordering = order_fields[order_key]
+        ## If direction is 'desc' or invalid, use descending order:
+        if (direction != 'asc'):
+            ordering = '-' + ordering
         return ordering
 
 
@@ -127,6 +155,12 @@ class JokeListView(ListView):
         else:
             context['joke'] = None
         context['user'] = self.request.user
+        ## Add Ordering into the Context:
+        order_fields, order_key, direction = self.get_order_settings()
+        context['order'] = order_key
+        context['direction'] = direction
+        ## Slice all but the last order key, which is 'default'
+        context['order_fields'] = list(order_fields.keys())[:-1]
         return context
 ## END class
 
