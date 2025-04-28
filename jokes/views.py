@@ -89,6 +89,18 @@ class JokeListView(ListView):
     ## And, <model> is the lowercase name of the model. 
     ## So, for JokeListView, Django is looking for the template at: 
     #### `jokes/joke_list.html`
+    #
+    # Adding in pagination:  It's this ez w/ Django!
+    ## When you add the paginate_by attribute to the ListView, 
+    # you get access to a new page_obj in the context.
+    paginate_by = 10
+    ## The page_obj object includes the following properties:
+        ## page_obj.has_previous – True if the current page is not the first page.
+        ## page_obj.previous_page_number – The number of the previous page.
+        ## page_obj.has_next – True if the current page is not the last page.
+        ## page_obj.next_page_number –The number of the next page.
+        ## page_obj.number – The current page number.
+        ## page_obj.paginator.num_pages – The total number of pages.
 
 
     ## @override
