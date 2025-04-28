@@ -56,7 +56,7 @@
               <span id="dislikes">{{ joke.num_dislikes }} dislike{{ joke.num_dislikes|pluralize }}.</span>
             {% endif %}
           </p>
-        {% else %}
+        {% elif user.is_authenticated %}
           {% csrf_token %}
           <button id="dislike-button" class="btn btn-light" type="button">
             <i class="fas fa-thumbs-down fa-2x text-danger mx-3"></i><span id="dislikes">{{ joke.num_dislikes }}</span>
