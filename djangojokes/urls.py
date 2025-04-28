@@ -24,6 +24,8 @@ urlpatterns = [
 ## The static() fcn, above, is a helper fcn that only works when settings.DEBUG is set to True. 
 ## So, you don’t have to worry about removing this code when deploying to production. 
 ## It'll be ignored.
+## We are NOT deploying storage to AWS S3 buckets rt now, cuz NO WORKY the way class said it does.
+## IN future, go thru free AWS S3 training on their site and see if you can figure it out.
 
 
 ## I want to keep these notes.
