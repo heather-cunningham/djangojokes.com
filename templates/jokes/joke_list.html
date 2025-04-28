@@ -5,24 +5,99 @@ Jokes
 {% endblock %}
 
 {% block main %}
-<a id="add-joke-btn" class="btn btn-success btn-sm float-end" href="{% url 'jokes:create' %}">
+<!-- <a id="add-joke-btn" class="btn btn-success btn-sm float-end" href="{% url 'jokes:create' %}">
   + New Joke
 </a>
+<h1>Jokes</h1> -->
 
-<h1>Jokes</h1>
+<div class="row">
+  <div class="col-12 col-md-2 col-lg-3">
+    <h2>Jokes</h2>
+  </div>
+
+  <!-- Ordering/Sorting form or table -->
+  <div class="col-12 col-md-8 col-lg-6">
+    <form class="my-2 mx-auto" style="max-width: 30rem;">
+      <label id="order-by-lbl" class="my-1 me-2" for="order-select">
+        Order By:
+      </label>
+      
+      <select class="form-control me-sm-2" name="order" id="order-select">
+        {% for field in order_fields %}
+          <option id="{{ field }}-sort-option" 
+            value="{{ field }}" 
+            {% if order == field %}selected{% endif %}>{{ field|title }}</option>
+        {% endfor %}
+      </select>
+      
+      <div class="form-check form-check-inline">
+        <input id="asc-radio-btn" 
+          class="form-check-input" 
+          type="radio" 
+          name="direction" 
+          value="asc" 
+          {% if direction == 'asc' %}checked{% endif %} />
+        <label id="asc-radio-lbl" class="form-check-label" for="asc-radio-btn">
+          ASC
+        </label>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <input id="desc-radio-btn" 
+          class="form-check-input" 
+          type="radio" 
+          name="direction"
+          value="desc" 
+          {% if direction == 'desc' %}checked{% endif %} />
+        <label id="desc-radio-lbl" class="form-check-label" for="desc-radio-btn">
+          DESC
+        </label>
+      </div>
+      
+      <button id="sort-jokes-btn" 
+        class="btn btn-primary btn-sm m-2" 
+        type="submit" 
+        value="Sort" 
+        alt="Sort the joke list button">Sort</button>
+    </form>
+  </div>
+
+  <div class="col-12 col-md-2 col-lg-3 text-end">
+    <a id="add-joke-btn" class="btn btn-success btn-sm m-2" href="{% url 'jokes:create' %}">
+      + New Joke
+    </a>
+  </div>
+</div>
+
 
 <div class="table-responsive">
   <table id="jokes-list-tbl-page-{{ page_obj.number }}" class="table table-striped" style="min-width: 500px">
     <thead>
-      <tr>
-        <th>Joke Set Up</th>
-        <th>Category/Tags</th>
-        {% if joke and joke.user == user %}
-          <th>Actions</th>
-        {% else %}
-          <th>Created</th>
-        {% endif %}
-      </tr>
+      {% with order=request.GET.order dir=request.GET.direction %}
+        <tr>
+          {% if order == 'joke' and dir == 'asc' %}
+            <th><a href="?order=joke&direction=desc">Joke Set-Up</a></th>
+          {% else %}
+            <th><a href="?order=joke&direction=asc">Joke Set-Up</a></th>
+          {% endif %}
+          
+          {% if order == 'category' and dir == 'asc' %}
+            <th><a href="?order=category&direction=desc">Category/Tags</a></th>
+          {% else %}
+            <th><a href="?order=category&direction=asc">Category/Tags</a></th>
+          {% endif %}
+
+          {% if joke and joke.user == user %}
+            <th>Actions</th>
+          {% else %}
+            {% if order == 'creator' and dir == 'asc' %}
+              <th><a href="?order=creator&direction=desc">Created</a></th>
+            {% else %}
+              <th><a href="?order=creator&direction=asc">Created</a></th>
+            {% endif %}
+          {% endif %}
+        </tr>
+      {% endwith %}
     </thead>
 
     <tbody>
@@ -72,33 +147,4 @@ Jokes
 
 {% include 'includes/pagination.html' %}
 
-<!-- <nav id="joke-list-page-{{ page_obj.number }}" aria-label="pagination">
-  <ul class="pagination justify-content-center">
-    {% if page_obj.has_previous %}
-      <li class="page-item"><a class="page-link" href="?page=1">&laquo; 1…</a></li>
-        {% if page_obj.previous_page_number != 1 %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-              {{ page_obj.previous_page_number }}
-            </a>
-          </li>
-        {% endif %}
-    {% endif %}
-        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
-    {% if page_obj.has_next %}
-      {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-            {{ page_obj.next_page_number }}
-          </a>
-        </li>
-      {% endif %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-          …{{ page_obj.paginator.num_pages }} &raquo;
-        </a>
-      </li>
-    {% endif %}
-  </ul>
-</nav> -->
 {% endblock %}
