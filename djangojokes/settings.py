@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     ## Third-party, I installed apps
-    'crispy_forms',
-    'crispy_bootstrap5',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'private_storage',
 
     ## My local apps
     'common.apps.CommonConfig',
@@ -195,6 +196,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+
+# File storage settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+# private-storage settings
+PRIVATE_STORAGE_ROOT = MEDIA_ROOT / 'private/'
+PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_staff'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

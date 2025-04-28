@@ -1,3 +1,6 @@
+import private_storage.urls
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
@@ -10,11 +13,19 @@ urlpatterns = [
     path('account/', include('users.urls')),
     path("account/", include("allauth.urls")),
 
+    # Private media & files
+    path('media/private/', include(private_storage.urls)),
+
     # Local Apps
     path("jobs/", include("jobs.urls")),
     path("jokes/", include("jokes.urls")),
     path("", include("pages.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+## The static() fcn, above, is a helper fcn that only works when settings.DEBUG is set to True. 
+## So, you don’t have to worry about removing this code when deploying to production. 
+## It'll be ignored.
+## We are NOT deploying storage to AWS S3 buckets rt now, cuz NO WORKY the way class said it does.
+## IN future, go thru free AWS S3 training on their site and see if you can figure it out.
 
 
 ## I want to keep these notes.

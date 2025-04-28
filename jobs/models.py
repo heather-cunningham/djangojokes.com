@@ -1,14 +1,23 @@
+import filetype
 from datetime import datetime
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from private_storage.fields import PrivateFileField
 
 
-## helper fcns
+## helper fcns/ Validators
 def validate_future_date(date_value):
     if (date_value < datetime.now().date()):
         raise ValidationError(message=f'{date_value} is in the past.', code='past_date')
+    return
 
+
+def validate_pdf(value):
+    kind = filetype.guess(value)
+    if (not kind or kind.mime != 'application/pdf'):
+        raise ValidationError("Not a PDF file")
+    return
 
 
 ## BEGIN class
@@ -45,6 +54,10 @@ class Applicant(models.Model):
     available_days = models.CharField(max_length=20)
     desired_hourly_wage = models.DecimalField(max_digits=5, decimal_places=2)
     cover_letter = models.TextField()
+    ## The `private/` leg or slug of the resumes dir, `upload_to="private/resumes"` 
+    ##### is now set in settings.py.
+    resume = PrivateFileField(upload_to="resumes", blank=True, help_text="PDFs only, please.", 
+                              validators=[validate_pdf])
     confirmation = models.BooleanField()
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)

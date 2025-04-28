@@ -1,0 +1,38 @@
+Hi Stephen,
+
+In Lesson 10, in the exercise where we changed the joke_list.html to only show the Actions buttons (for edit and delete) in the table if the user logged in is the user whom wrote the joke(s): To change the header label for that column to flip between "Actions" and "Creator" and to have access to the joke variable/object in that table head, I had to add the joke variable/object to the context of the JokeListView class, like this:
+
+class JokeListView(ListView):
+
+    model = Joke
+
+  
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if (self.request.user.is_authenticated):
+
+            context['joke'] = self.model.objects.filter(user=self.request.user).first()
+        else:
+            context['joke'] = None
+        context['user'] = self.request.user
+        return context
+My question is: Why am I able to access the user variable/object here in my_account.html without adding it to the MyAccountPageView's context, please?
+
+
+
+
+Hi Heather,
+
+You are able to access the user variable directly in templates, such as my_account.html, 
+without adding it to the view's context because Django automatically makes the user object available to all templates 
+when a user is authenticated. This is done through Django's RequestContext, which automatically includes certain context processors, 
+one of which is the django.contrib.auth.context_processors.auth. This processor ensures the current authenticated user is added 
+to the template context, which allows the user variable to be accessed directly.
+
+If this answers your question, feel free to complete this conversation. If not, 
+a trainer will get back to you within one business day!
+
+
+Best,
+
+WebuBot
