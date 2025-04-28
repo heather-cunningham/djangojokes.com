@@ -105,7 +105,16 @@ class JokeListView(ListView):
     ## You can control the ordering of ListViews using the ordering attribute.
     ## Prepend w/ a minus sign for descending order.  Ascending order is the default.
     ## Works great if you always want to sort in the same way, but not if you want dynamic sorting.
-    ordering = ['-question']
+    # ordering = ['-question']
+    
+
+    
+    ## For Dynamic Ordering: Use the get_ordering() method of ListViews
+    # It makes it possible to change the ordering based on values passed in over the querystring:
+    def get_ordering(self):
+        # default ordering will be '-updated'
+        ordering = self.request.GET.get('order', '-updated')
+        return ordering
 
 
     ## @override
