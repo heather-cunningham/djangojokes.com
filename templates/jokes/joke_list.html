@@ -107,11 +107,14 @@ Jokes
           <a id="joke-{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
         </td>
         <td>
-          <span id="joke-{{joke.id}}-category">{{ joke.category.category }}</span>
+          <a id="joke-{{joke.id}}-category" 
+            href="{% url 'jokes:category' joke.category.slug %}?order={{ order }}&direction={{ direction }}">
+            {{ joke.category.category }}</a>
           <br />
           {% for tag in joke.tags.all %}
-            <span id="joke-{{joke.id}}-tag-{{tag.id}}" 
-              class="badge rounded-pill bg-secondary">{{ tag.tag }}</span>
+            <a id="joke-{{joke.id}}-tag-{{tag.id}}"
+              href="{% url 'jokes:tag' tag.slug %}?order={{ order }}&direction={{ direction }}" 
+              class="badge rounded-pill bg-secondary">{{ tag.tag }}</a>
           {% endfor %}
         </td>
         {% if joke.user == user %}
@@ -128,8 +131,10 @@ Jokes
           </td>
         {% else %}
           <td id="created-cell">
-            <span id="joke-{{joke.id}}-createdby"><span class="createdby-label">By:</span> 
-            {{ joke.user.username }}</span>
+            <span class="createdby-label">By:</span> 
+            <a id="joke-{{joke.id}}-createdby"
+              href="{% url 'jokes:creator' joke.user.username %}?order={{ order }}&direction={{ direction }}">
+              {{ joke.user.username }}</a>
             <br />
             <span id="joke-{{joke.id}}-created"><span class="createdby-label">On:</span> 
             {{ joke.created|date:'SHORT_DATE_FORMAT' }}</span>
@@ -139,6 +144,10 @@ Jokes
           </td>
         {% endif %}
       </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">No jokes found!</td>
+        </tr>
       {% endfor %}
     </tbody>
 

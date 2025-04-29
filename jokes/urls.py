@@ -23,4 +23,7 @@ urlpatterns = [
     path("category/<slug>/", JokeListView.as_view(), name="category"),
     path("tag/<slug>/", JokeListView.as_view(), name="tag"),
     path("creator/<slug>/", JokeListView.as_view(), name="creator"),
+    ## MyJokes adjustment from Copilot:
+    ## New route for "my_jokes" to filter just that user's created jokes.
+    path('my-jokes/', JokeListView.as_view(), name='my_jokes'),
 ]

@@ -80,7 +80,7 @@
                   href="{% url 'my-account' %}">My Account</a>
                 <a id="my-jokes-nav-link" 
                   class="dropdown-item" 
-                  href="{% url 'jokes:creator' user.username %}?order={{ order }}&direction={{ direction }}">
+                  href="{% url 'jokes:my_jokes' %}?order={{ order }}&direction={{ direction }}">
                   My Jokes</a>
                 <div class="dropdown-divider"></div>
                 <form method="post" action="{% url 'account_logout' %}">

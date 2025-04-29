@@ -150,7 +150,10 @@ class JokeListView(ListView):
     def get_queryset(self):
         ordering_by = self.get_ordering()
         query_set = Joke.objects.all()
-        if ("slug" in self.kwargs): ## Filter by category OR tag
+        ## Check if the route name is "my_jokes" to filter just that user's created jokes.
+        if (self.request.resolver_match.url_name == 'my_jokes'):   
+            query_set = query_set.filter(user=self.request.user)
+        elif ("slug" in self.kwargs): ## Filter by category OR tag
             slug = self.kwargs["slug"]
             if ("/category" in self.request.path_info): ## Filter by category
                 query_set = query_set.filter(category__slug=slug)
