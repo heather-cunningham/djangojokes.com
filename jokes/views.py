@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from .models import Joke, JokeVote
@@ -150,8 +151,11 @@ class JokeListView(ListView):
     def get_queryset(self):
         ordering_by = self.get_ordering()
         query_set = Joke.objects.all()
+        if ("search_qry" in self.request.GET): # Filter by search query
+            search_qry = self.request.GET.get("search_qry") 
+            query_set = query_set.filter(Q(question__icontains=search_qry) | Q(answer__icontains=search_qry))
         ## Check if the route name is "my_jokes" to filter just that user's created jokes.
-        if (self.request.resolver_match.url_name == 'my_jokes'):   
+        if (self.request.resolver_match.url_name == "my_jokes"):   
             query_set = query_set.filter(user=self.request.user)
         elif ("slug" in self.kwargs): ## Filter by category OR tag
             slug = self.kwargs["slug"]

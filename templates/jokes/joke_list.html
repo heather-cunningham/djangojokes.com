@@ -5,11 +5,6 @@ Jokes
 {% endblock %}
 
 {% block main %}
-<!-- <a id="add-joke-btn" class="btn btn-success btn-sm float-end" href="{% url 'jokes:create' %}">
-  + New Joke
-</a>
-<h1>Jokes</h1> -->
-
 <div class="row">
   <div class="col-12 col-md-2 col-lg-3">
     <h2>Jokes</h2>
@@ -17,12 +12,14 @@ Jokes
 
   <!-- Ordering/Sorting form or table -->
   <div class="col-12 col-md-8 col-lg-6">
-    <form class="my-2 mx-auto" style="max-width: 30rem;">
+    <form id="sort-form" class="my-2 mx-auto" style="max-width: 30rem;">
+      <input type="hidden" name="search_qry" value="{{ request.GET.search_qry }}" style="display: none;"/> 
+
       <label id="order-by-lbl" class="my-1 me-2" for="order-select">
         Order By:
       </label>
       
-      <select class="form-control me-sm-2" name="order" id="order-select">
+      <select id="order-select" class="form-control me-sm-2" name="order">
         {% for field in order_fields %}
           <option id="{{ field }}-sort-option" 
             value="{{ field }}" 
@@ -76,24 +73,36 @@ Jokes
       {% with order=request.GET.order dir=request.GET.direction %}
         <tr>
           {% if order == 'joke' and dir == 'asc' %}
-            <th><a href="?order=joke&direction=desc">Joke Set-Up</a></th>
+            <th>
+              <a href="?order=joke&direction=desc&search_qry={{ request.GET.search_qry }}">Joke Set-Up</a>
+            </th>
           {% else %}
-            <th><a href="?order=joke&direction=asc">Joke Set-Up</a></th>
+            <th>
+              <a href="?order=joke&direction=asc&search_qry={{ request.GET.search_qry }}">Joke Set-Up</a>
+            </th>
           {% endif %}
           
           {% if order == 'category' and dir == 'asc' %}
-            <th><a href="?order=category&direction=desc">Category/Tags</a></th>
+            <th>
+              <a href="?order=category&direction=desc&search_qry={{ request.GET.search_qry }}">Category/Tags</a>
+            </th>
           {% else %}
-            <th><a href="?order=category&direction=asc">Category/Tags</a></th>
+            <th>
+              <a href="?order=category&direction=asc&search_qry={{ request.GET.search_qry }}">Category/Tags</a>
+            </th>
           {% endif %}
 
           {% if joke and joke.user == user %}
             <th>Actions</th>
           {% else %}
             {% if order == 'creator' and dir == 'asc' %}
-              <th><a href="?order=creator&direction=desc">Created</a></th>
+              <th>
+                <a href="?order=creator&direction=desc&search_qry={{ request.GET.search_qry }}">Created</a>
+              </th>
             {% else %}
-              <th><a href="?order=creator&direction=asc">Created</a></th>
+              <th>
+                <a href="?order=creator&direction=asc&search_qry={{ request.GET.search_qry }}">Created</a>
+              </th>
             {% endif %}
           {% endif %}
         </tr>

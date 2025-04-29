@@ -96,11 +96,20 @@
           {% endif %} 
         </ul>
 
-        <form class="row my-2 my-lg-0 row">
-          <input class="form-control me-sm-2 col" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0 me-4 col" type="submit">
-            Search
-          </button>
+        <form id="search-form" class="row my-2 my-lg-0 row" action="{% url 'jokes:list' %}">
+          <input id="search-input" 
+            class="form-control me-sm-2 col" 
+            type="search" 
+            placeholder="Search" 
+            aria-label="Search"
+            value="{{ request.GET.search_qry }}"
+            alt="Enter a search term to search jokes"
+            name="search_qry" />
+          <button id="search-btn" 
+            class="btn btn-outline-success my-2 my-sm-0 me-4 col" 
+            type="submit" 
+            alt="Search button: Click or tap to search jokes" 
+            name="Search">Search</button>
         </form>
       </div>
     </nav>
