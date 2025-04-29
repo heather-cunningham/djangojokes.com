@@ -133,16 +133,33 @@ class JokeListView(ListView):
     
 
     ## For Dynamic Ordering: Use the get_ordering() method of ListViews
-    # It makes it possible to change the ordering based on values passed in over the querystring:
+    # It makes it possible to change the ordering based on values passed in over the querystring.
+    ## @override
     def get_ordering(self):
         ## Default ordering will be '-updated'
         # ordering = self.request.GET.get('order', '-updated')
         order_fields, order_key, direction = self.get_order_settings()
-        ordering = order_fields[order_key]
+        order_by = order_fields[order_key]
         ## If direction is 'desc' or invalid, use descending order:
         if (direction != 'asc'):
-            ordering = '-' + ordering
-        return ordering
+            order_by = '-' + order_by
+        return order_by
+    
+
+    ## @override
+    def get_queryset(self):
+        ordering_by = self.get_ordering()
+        query_set = Joke.objects.all()
+        if ("slug" in self.kwargs): ## Filter by category OR tag
+            slug = self.kwargs["slug"]
+            if ("/category" in self.request.path_info): ## Filter by category
+                query_set = query_set.filter(category__slug=slug)
+            if ("/tag" in self.request.path_info): ## Filter by tag
+                query_set = query_set.filter(tags__slug=slug)
+        elif ("username" in self.kwargs): # Filter by joke creator
+            username = self.kwargs["username"]
+            query_set = query_set.filter(user__username=username)
+        return query_set.order_by(ordering_by)
 
 
     ## @override
