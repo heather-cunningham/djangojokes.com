@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Avg
 from django.urls import reverse ## Gets and returns the URL based on the passed-in URL pattern name.
 from common.utils.text import create_unique_url_slug
 
@@ -92,6 +93,36 @@ class Joke(models.Model):
     @property
     def num_dislikes(self):
         return self.jokevotes.filter(vote=-1).count() ## 2 == False or No or Dislike 
+    
+
+    @property
+    def rating(self):
+        rating = JokeVote.objects.filter(joke=self).aggregate(average=Avg('vote'))
+        rating_avg = rating['average']
+        ## self.num_votes doesn't seem to be working correctly.  It always comes back as truthy,
+        ## even when it's zero. So, I used the likes and dislikes.
+        if(self.num_likes and self.num_dislikes and (self.num_likes == self.num_dislikes)): 
+            return 5
+        else:
+            rating = float(round(5 + (rating_avg * 5), 2))
+            if(rating.is_integer()):
+                return int(rating)
+            else:
+                return rating
+        ## My formula DOES NOT work as well and needs many more IF branches.
+        ## Used class's formula after all.
+        # elif(self.num_dislikes > self.num_likes):
+        #     rating = float(round((10 - (abs(rating_avg) * 10)), 2))
+        #     if(rating.is_integer()):
+        #         return int(rating)
+        #     else:
+        #         return rating
+        # elif(self.num_likes > self.num_dislikes):
+        #     rating = float(round((rating_avg * 10), 2))
+        #     if(rating.is_integer()):
+        #         return int(rating)
+        #     else:
+        #         return rating 
 
 
     ## @override -- Python doesn't have this decorator

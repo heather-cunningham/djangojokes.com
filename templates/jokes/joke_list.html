@@ -105,6 +105,7 @@ Jokes
               </th>
             {% endif %}
           {% endif %}
+          <th>Rating (out of 10)</th>
         </tr>
       {% endwith %}
     </thead>
@@ -116,40 +117,69 @@ Jokes
           <a id="joke-{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
         </td>
         <td>
-          <a id="joke-{{joke.id}}-category" 
+          <a id="category-joke-{{joke.id}}" 
             href="{% url 'jokes:category' joke.category.slug %}?order={{ order }}&direction={{ direction }}">
             {{ joke.category.category }}</a>
           <br />
           {% for tag in joke.tags.all %}
-            <a id="joke-{{joke.id}}-tag-{{tag.id}}"
+            <a id="tag-{{tag.id}}-joke-{{joke.id}}"
               href="{% url 'jokes:tag' tag.slug %}?order={{ order }}&direction={{ direction }}" 
               class="badge rounded-pill bg-secondary">{{ tag.tag }}</a>
           {% endfor %}
         </td>
         {% if joke.user == user %}
-          <td id="edit-cell">
-            <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
+          <td id="edit-cell-joke-{{joke.id}}">
+            <a id="update-btn-joke-{{joke.id}}" href="{% url 'jokes:update' joke.slug %}" 
               name="Update" alt="Update joke">
               <i class="fas fa-pencil-alt"></i>
             </a>
             &nbsp;
-            <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
+            <a id="delete-btn-joke-{{joke.id}}" href="{% url 'jokes:delete' joke.slug %}" 
               name="Delete" alt="Delete joke">
               <i class="far fa-trash-alt"></i>
             </a>
           </td>
         {% else %}
-          <td id="created-cell">
+          <td id="created-cell-joke-{{joke.id}}">
             <span class="createdby-label">By:</span> 
-            <a id="joke-{{joke.id}}-createdby"
+            <a id="createdby-joke-{{joke.id}}"
               href="{% url 'jokes:creator' joke.user.username %}?order={{ order }}&direction={{ direction }}">
               {{ joke.user.username }}</a>
             <br />
-            <span id="joke-{{joke.id}}-created"><span class="createdby-label">On:</span> 
+            <span id="created-joke-{{joke.id}}"><span class="createdby-label">On:</span> 
             {{ joke.created|date:'SHORT_DATE_FORMAT' }}</span>
             <br />
-            <span id="joke-{{joke.id}}-updated"><span class="createdby-label">Updated:</span><br/> 
+            <span id="updated-joke-{{joke.id}}"><span class="createdby-label">Updated:</span><br/> 
             {{ joke.updated|date:'SHORT_DATE_FORMAT' }}</span>
+          </td>
+        {% endif %}
+        {% if joke.num_likes == 0 and joke.num_dislikes == 0  %}
+          <td>
+            <p id="rating-container-joke-{{joke.id}}" class="no-votes-yet">
+              No rating yet!<br />
+              Click the joke's set-up to be the first to vote.
+            </p>
+          </td>
+        {% else %}
+          <td>
+            <div id="rating-container-joke-{{joke.id}}" class="rating-container">
+              <div id="rating-div-joke-{{joke.id}}" class="rating-div" 
+                title="Joke rating out of 10 = {{ joke.rating }}" 
+                style="display: inline-block; width: 85%;">
+                <!-- `widthratio` NO WORKY!!! NEVER WORKS! -->
+                <!-- <div id="rating" style="width:{% widthratio joke.rating 10 100 %}%;"></div> -->
+                <div id="rating-bar-joke-{{joke.id}}" 
+                  class="rating-bar" 
+                  style="--rating-width: {{ joke.rating_width }}%;"></div>
+              </div>
+              <div id="rating-joke-{{joke.id}}" style="display: inline-block; width: 10%;">
+                {{ joke.rating }} 
+              </div>
+            </div>
+            <div id="num-votes-joke-{{joke.id}}" class="num-votes">
+              ({{ joke.num_likes }}<i class="fas fa-thumbs-up fa-1x text-success mx-1"></i> and
+               {{ joke.num_dislikes }}<i class="fas fa-thumbs-down text-danger mx-1"></i>)
+            </div>
           </td>
         {% endif %}
       </tr>

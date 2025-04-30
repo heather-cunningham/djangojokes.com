@@ -172,7 +172,12 @@ class JokeListView(ListView):
 
     ## @override
     def get_context_data(self, **kwargs):
+        # Access the default context object name `joke_list`
         context = super().get_context_data(**kwargs)
+        ## Compute #rating-bar width dynamically b/c `widthratio` does not work
+        for joke in context["joke_list"]:
+            if(joke.rating):
+                joke.rating_width = joke.rating * 10
         # Check if the user is authenticated:
         if (self.request.user.is_authenticated):
             # Add the first joke related to the current user
