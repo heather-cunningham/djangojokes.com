@@ -182,3 +182,5 @@ djangojokes/local_settings.py
 media/private/resumes
 Book1.xlsx
 ~$Book1.xlsx
+staticfiles/admin/
+staticfiles/debug_toolbar/
