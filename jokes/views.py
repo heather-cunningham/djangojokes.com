@@ -167,7 +167,9 @@ class JokeListView(ListView):
         elif ("username" in self.kwargs): # Filter by joke creator
             username = self.kwargs["username"]
             query_set = query_set.filter(user__username=username)
-        return query_set.order_by(ordering_by)
+        ## Adding in prefetch for optimization and to reduce dupe hits to the db
+        return query_set.prefetch_related('category', 'user').order_by(ordering_by)
+        # return query_set.order_by(ordering_by)
 
 
     ## @override
