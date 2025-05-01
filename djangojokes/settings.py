@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-029avp=lr*518q_v-b43$3g4*3ac0d0mki4-*6h7i4^*9^wakd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+## If turning off DEBUG (i.e., setting it to False), must set this ALLOWED_HOSTS.
+## It can be set to the same address as the localhost server & INTERNAL_IPS: '127.0.0.1'.
 ALLOWED_HOSTS = []
 
 # Necessary for the Debug Toolbar: not specific to the Django Debug Toolbar, but it is required by it. 
