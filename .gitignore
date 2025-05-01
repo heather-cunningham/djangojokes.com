@@ -184,3 +184,7 @@ Book1.xlsx
 ~$Book1.xlsx
 staticfiles/admin/
 staticfiles/debug_toolbar/
+AdminSite _vs_AdminPanel_for_BE.txt
+Diff_bw_AmazonS3_n_AmazonStorageGateway.txt
+DjangoORM_diff_bw_countMethod_n_MinMaxSumAvgFcns.txt
+DjangoORM_why_aggregateMethod_is_terminal.txt
