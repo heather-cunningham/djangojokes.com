@@ -87,7 +87,6 @@ class Joke(models.Model):
         ## Actually, only count the records where the 'vote' col IS NOT NULL
         total_num_of_votes = self.jokevotes.filter(vote__isnull=False).count()
         if(total_num_of_votes):
-            print("!!!! VOTE COUNT: ", total_num_of_votes)
             return total_num_of_votes
         return 0
         # return self.jokevotes.count()
@@ -116,23 +115,8 @@ class Joke(models.Model):
         result['rating'] = format_integer_from_float(
             float(round(5 + ((result['sum_votes']/result['num_votes'])*5), 2))
         )## Check if the float is an integer, and if so, return the int; else, return the float.
-        #
-        ## Code from class: 
-        # DOES NOT MAKE SENSE!
-        ## How is this arithmetic supposed to work?  I don't get it:
-        # result['dislikes'] = int((result['num_votes'] - result['sum_votes'])/2)
-        # result['likes'] = result['num_votes'] - result['dislikes']
-        #
-        ## If have +7 likes and -3 dislikes = int((10 - (10 - 3))/2)  
-        ##                                  = int((10 - 7)/2)
-        ##                                  = int(3/2)
-        ##                                  = int(1.5)
-        ##               result['dislikes'] = 1
-        ## Huh???  This math doesn't work!!!
-        #
-        ## Do it your own way combo w/ classroom's:
-        ## Get the count of the dislikes from its property:  
-        result['dislikes'] = self.num_dislikes
+        ## Extrapolate the Dislikes from the total votes and their sum: 
+        result['dislikes'] = int((result['num_votes'] - result['sum_votes'])/2)
         ## Extrapolate the Likes from the Dislikes
         result['likes'] = result['num_votes'] - result['dislikes']
         return result 
