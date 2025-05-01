@@ -58,15 +58,17 @@
           </p>
         {% elif user.is_authenticated %}
           {% csrf_token %}
-          <button id="dislike-button" class="btn btn-light" type="button">
-            <i class="fas fa-thumbs-down fa-2x text-danger mx-3"></i><span id="dislikes">{{ joke.num_dislikes }}</span>
-          </button>
-          <button id="like-button" class="btn btn-light" type="button">
-            <i class="fas fa-thumbs-up fa-2x text-success mx-3"></i><span id="likes">{{ joke.num_likes }}</span>
-          </button>
-
-          <div id="output" class="text-info"></div>
-          <span id="num-votes">{{ joke.num_votes }} vote{{ joke.num_votes|pluralize }}</span>
+            <button id="dislike-button" class="btn btn-light" type="button">
+              <i class="fas fa-thumbs-down text-danger"></i>
+              <span id="dislikes">{{ joke.num_dislikes }}</span>
+            </button>
+            <button id="like-button" class="btn btn-light" type="button">
+              <i class="fas fa-thumbs-up text-success"></i>
+              <span id="likes">{{ joke.num_likes }}</span>
+            </button>
+            <div id="output">
+              <span id="num-votes">{{ joke.num_votes }} vote{{ joke.num_votes|pluralize }}</span>
+            </div>
         {% endif %}
       </div>
     

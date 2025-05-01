@@ -59,13 +59,13 @@ Jokes
     </form>
   </div>
 
+  <!-- add-joke-btn -->
   <div class="col-12 col-md-2 col-lg-3 text-end">
     <a id="add-joke-btn" class="btn btn-success btn-sm m-2" href="{% url 'jokes:create' %}">
       + New Joke
     </a>
   </div>
 </div>
-
 
 <div class="table-responsive">
   <table id="jokes-list-tbl-page-{{ page_obj.number }}" class="table table-striped" style="min-width: 500px">
@@ -153,36 +153,40 @@ Jokes
             {{ joke.updated|date:'SHORT_DATE_FORMAT' }}</span>
           </td>
         {% endif %}
-        {% if joke.num_likes == 0 and joke.num_dislikes == 0  %}
-          <td>
-            <p id="rating-container-joke-{{joke.id}}" class="no-votes-yet">
-              No rating yet!<br />
-              Click the joke's set-up to be the first to vote.
-            </p>
-          </td>
-        {% else %}
-          <td>
-            <div id="rating-container-joke-{{joke.id}}" class="rating-container">
-              <div id="rating-div-joke-{{joke.id}}" class="rating-div" 
-                title="Joke rating out of 10 = {{ joke.rating }}" 
-                style="display: inline-block; width: 85%;">
-                <!-- `widthratio` NO WORKY!!! NEVER WORKS! -->
-                <!-- <div id="rating" style="width:{% widthratio joke.rating 10 100 %}%;"></div> -->
-                <div id="rating-bar-joke-{{joke.id}}" 
-                  class="rating-bar" 
-                  style="--rating-width: {{ joke.rating_width }}%;"></div>
+
+        {% with votes=joke.votes %}
+          {% if votes.num_votes == 0 %}
+            <td>
+              <p id="rating-container-joke-{{joke.id}}" class="no-votes-yet">
+                No rating yet!<br />
+                Click the joke's set-up<br /> 
+                to be the first to vote. :)
+              </p>
+            </td>
+          {% else %}
+            <td>
+              <div id="rating-container-joke-{{joke.id}}" class="rating-container">
+                <div id="rating-div-joke-{{joke.id}}" class="rating-div" 
+                  title="Joke rating out of 10 = {{ votes.rating }}"> 
+                  <!-- `widthratio` NO WORKY!!! NEVER WORKS! -->
+                  <!-- <div id="rating" style="width:{% widthratio joke.rating 10 100 %}%;"></div> -->
+                  <div id="rating-bar-joke-{{joke.id}}" 
+                    class="rating-bar" 
+                    style="--rating-width: {{ joke.rating_width }}%;"></div>
+                </div>
+                <div id="rating-joke-{{joke.id}}" class="rating">
+                  {{ votes.rating }} 
+                </div>
               </div>
-              <div id="rating-joke-{{joke.id}}" style="display: inline-block; width: 10%;">
-                {{ joke.rating }} 
+              <div id="num-votes-joke-{{joke.id}}" class="num-votes">
+                ({{ votes.likes }}<i class="fas fa-thumbs-up text-success mx-1"></i> and
+                {{ votes.dislikes }}<i class="fas fa-thumbs-down text-danger mx-1"></i>)
               </div>
-            </div>
-            <div id="num-votes-joke-{{joke.id}}" class="num-votes">
-              ({{ joke.num_likes }}<i class="fas fa-thumbs-up fa-1x text-success mx-1"></i> and
-               {{ joke.num_dislikes }}<i class="fas fa-thumbs-down text-danger mx-1"></i>)
-            </div>
-          </td>
-        {% endif %}
+            </td>
+          {% endif %}
+        {% endwith %}
       </tr>
+
       {% empty %}
         <tr>
           <td colspan="3">No jokes found!</td>

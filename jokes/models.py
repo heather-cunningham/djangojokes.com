@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Count, Sum
 from django.urls import reverse ## Gets and returns the URL based on the passed-in URL pattern name.
 from common.utils.text import create_unique_url_slug
+from common.utils.helpers import format_integer_from_float
 
 
 ## Model Manager(s)
@@ -82,7 +83,14 @@ class Joke(models.Model):
     ## You can access these properties in HTML templates as attributes of the Joke instance.
     @property
     def num_votes(self):
-        return self.jokevotes.count()
+        # total_num_of_votes = self.jokevotes.count()
+        ## Actually, only count the records where the 'vote' col IS NOT NULL
+        total_num_of_votes = self.jokevotes.filter(vote__isnull=False).count()
+        if(total_num_of_votes):
+            print("!!!! VOTE COUNT: ", total_num_of_votes)
+            return total_num_of_votes
+        return 0
+        # return self.jokevotes.count()
 
 
     @property
@@ -92,23 +100,58 @@ class Joke(models.Model):
 
     @property
     def num_dislikes(self):
-        return self.jokevotes.filter(vote=-1).count() ## 2 == False or No or Dislike 
+        return self.jokevotes.filter(vote=-1).count() ## -1 == False or No or Dislike
+
+
+    @property
+    def votes(self):
+        result = JokeVote.objects.filter(joke=self, vote__isnull=False).aggregate(
+            num_votes=Count('vote'), 
+            sum_votes=Sum('vote')
+        )
+        # If there aren’t any votes yet, return a dictionary with values of 0.
+        if (result['num_votes'] == 0):
+            return {'num_votes': 0, 'rating': 0, 'likes': 0, 'dislikes': 0}
+        # Otherwise, calculate the dict values using num_votes and sum_votes.
+        result['rating'] = format_integer_from_float(
+            float(round(5 + ((result['sum_votes']/result['num_votes'])*5), 2))
+        )## Check if the float is an integer, and if so, return the int; else, return the float.
+        #
+        ## Code from class: 
+        # DOES NOT MAKE SENSE!
+        ## How is this arithmetic supposed to work?  I don't get it:
+        # result['dislikes'] = int((result['num_votes'] - result['sum_votes'])/2)
+        # result['likes'] = result['num_votes'] - result['dislikes']
+        #
+        ## If have +7 likes and -3 dislikes = int((10 - (10 - 3))/2)  
+        ##                                  = int((10 - 7)/2)
+        ##                                  = int(3/2)
+        ##                                  = int(1.5)
+        ##               result['dislikes'] = 1
+        ## Huh???  This math doesn't work!!!
+        #
+        ## Do it your own way combo w/ classroom's:
+        ## Get the count of the dislikes from its property:  
+        result['dislikes'] = self.num_dislikes
+        ## Extrapolate the Likes from the Dislikes
+        result['likes'] = result['num_votes'] - result['dislikes']
+        return result 
     
 
     @property
     def rating(self):
-        rating = JokeVote.objects.filter(joke=self).aggregate(average=Avg('vote'))
-        rating_avg = rating['average']
-        ## self.num_votes doesn't seem to be working correctly.  It always comes back as truthy,
-        ## even when it's zero. So, I used the likes and dislikes.
-        if(self.num_likes and self.num_dislikes and (self.num_likes == self.num_dislikes)): 
-            return 5
-        else:
-            rating = float(round(5 + (rating_avg * 5), 2))
-            if(rating.is_integer()):
-                return int(rating)
+        if(self.num_votes):
+            if(self.num_likes and self.num_dislikes and (self.num_likes == self.num_dislikes)): 
+                return 5
             else:
-                return rating
+                rating = JokeVote.objects.filter(joke=self).aggregate(average=Avg('vote'))                
+                rating_avg = rating['average']
+                if(rating_avg):
+                    ## Check if the float is a whole number, and if so, return the integer.
+                    ## Else, return the float.
+                    rating = format_integer_from_float(float(round(5 + (rating_avg * 5), 2)))
+                    return rating
+        return 0
         ## My formula DOES NOT work as well and needs many more IF branches.
         ## Used class's formula after all.
         # elif(self.num_dislikes > self.num_likes):

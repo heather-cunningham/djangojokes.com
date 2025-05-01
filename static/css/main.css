@@ -15,6 +15,11 @@ header {
   border-bottom: 1px solid darkgreen;
 }
 
+#search-input {
+  width: 8rems;
+  height: 2.4rems;
+}
+
 /* FORM STYLES */
 label, legend {
   font-variant: small-caps;
@@ -84,8 +89,10 @@ td#edit-cell a {
 }
 
 .rating-div {
-  max-width: 5rem;
+  display: inline-block; 
+  width: 95%;
   height: auto;
+  max-width: 8rem;
   padding: 2px;
   background-color:silver;
   border-radius: .5em;
@@ -100,13 +107,18 @@ td#edit-cell a {
   z-index: 1;
 }
 
+.rating {
+  display: inline-block; 
+  width: 5%;
+  height: auto;
+}
+
 .num-votes {
   font-size: 0.85rem;
   color: #676565; /* a dark gray */
 }
 
 .no-votes-yet {
-  width: 45%;
   height: auto;
   margin: 6px;
   font-size: 0.90rem;
@@ -114,3 +126,10 @@ td#edit-cell a {
   color: darkred;
 }
 /* end RATING BAR styles */
+
+
+/* VOTE BUTTONS */
+#like-button, #dislike-button {
+  font-size: 2rem;
+}
+/* end VOTE BUTTONS */
