@@ -180,10 +180,11 @@ How-to_reverseFcn_and_getAbsoluteUrlFcn_in_Model.docx
 .idea/
 djangojokes/local_settings.py
 media/private/resumes
-AdminSite _vs_AdminPanel_for_BE.txt
 Book1.xlsx
+~$Book1.xlsx
+staticfiles/admin/
+staticfiles/debug_toolbar/
+AdminSite _vs_AdminPanel_for_BE.txt
 Diff_bw_AmazonS3_n_AmazonStorageGateway.txt
 DjangoORM_diff_bw_countMethod_n_MinMaxSumAvgFcns.txt
 DjangoORM_why_aggregateMethod_is_terminal.txt
-staticfiles/admin/
-staticfiles/debug_toolbar/

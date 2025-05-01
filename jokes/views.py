@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q  ## Allows compound queries using conditions, like AND or OR, etc.
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from .models import Joke, JokeVote
@@ -133,21 +134,52 @@ class JokeListView(ListView):
     
 
     ## For Dynamic Ordering: Use the get_ordering() method of ListViews
-    # It makes it possible to change the ordering based on values passed in over the querystring:
+    # It makes it possible to change the ordering based on values passed in over the querystring.
+    ## @override
     def get_ordering(self):
         ## Default ordering will be '-updated'
         # ordering = self.request.GET.get('order', '-updated')
         order_fields, order_key, direction = self.get_order_settings()
-        ordering = order_fields[order_key]
+        order_by = order_fields[order_key]
         ## If direction is 'desc' or invalid, use descending order:
         if (direction != 'asc'):
-            ordering = '-' + ordering
-        return ordering
+            order_by = '-' + order_by
+        return order_by
+    
+
+    ## @override
+    def get_queryset(self):
+        ordering_by = self.get_ordering()
+        query_set = Joke.objects.all()
+        if ("search_qry" in self.request.GET): # Filter by search query
+            search_qry = self.request.GET.get("search_qry") 
+            ## Q lib: Allows compound queries using conditions, like <AND> & or <OR> |, etc.
+            query_set = query_set.filter(Q(question__icontains=search_qry) | Q(answer__icontains=search_qry))
+        ## Check if the route name is "my_jokes" to filter just that user's created jokes.
+        if (self.request.resolver_match.url_name == "my_jokes"):   
+            query_set = query_set.filter(user=self.request.user)
+        elif ("slug" in self.kwargs): ## Filter by category OR tag
+            slug = self.kwargs["slug"]
+            if ("/category" in self.request.path_info): ## Filter by category
+                query_set = query_set.filter(category__slug=slug)
+            if ("/tag" in self.request.path_info): ## Filter by tag
+                query_set = query_set.filter(tags__slug=slug)
+        elif ("username" in self.kwargs): # Filter by joke creator
+            username = self.kwargs["username"]
+            query_set = query_set.filter(user__username=username)
+        ## Adding in prefetch for optimization and to reduce dupe hits to the db
+        return query_set.prefetch_related('category', 'user').order_by(ordering_by)
+        # return query_set.order_by(ordering_by)
 
 
     ## @override
     def get_context_data(self, **kwargs):
+        # Access the default context object name `joke_list`
         context = super().get_context_data(**kwargs)
+        ## Compute #rating-bar width dynamically b/c `widthratio` does not work
+        for joke in context["joke_list"]:
+            if(joke.rating):
+                joke.rating_width = joke.rating * 10
         # Check if the user is authenticated:
         if (self.request.user.is_authenticated):
             # Add the first joke related to the current user

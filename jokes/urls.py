@@ -19,4 +19,11 @@ urlpatterns = [
     ## When a URL matching this pattern, below, is requested, 
     # the vote() View fcn will be called and passed the slug from the URL.
     path('joke/<slug>/vote/', vote, name='ajax-vote'),
+    ## Filtering Results by Category, Tag, or Creator:
+    path("category/<slug>/", JokeListView.as_view(), name="category"),
+    path("tag/<slug>/", JokeListView.as_view(), name="tag"),
+    path("creator/<slug>/", JokeListView.as_view(), name="creator"),
+    ## MyJokes adjustment from Copilot:
+    ## New route for "my_jokes" to filter just that user's created jokes.
+    path('my-jokes/', JokeListView.as_view(), name='my_jokes'),
 ]

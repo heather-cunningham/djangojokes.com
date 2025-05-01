@@ -5,11 +5,6 @@ Jokes
 {% endblock %}
 
 {% block main %}
-<!-- <a id="add-joke-btn" class="btn btn-success btn-sm float-end" href="{% url 'jokes:create' %}">
-  + New Joke
-</a>
-<h1>Jokes</h1> -->
-
 <div class="row">
   <div class="col-12 col-md-2 col-lg-3">
     <h2>Jokes</h2>
@@ -17,12 +12,14 @@ Jokes
 
   <!-- Ordering/Sorting form or table -->
   <div class="col-12 col-md-8 col-lg-6">
-    <form class="my-2 mx-auto" style="max-width: 30rem;">
+    <form id="sort-form" class="my-2 mx-auto" style="max-width: 30rem;">
+      <input type="hidden" name="search_qry" value="{{ request.GET.search_qry }}" style="display: none;"/> 
+
       <label id="order-by-lbl" class="my-1 me-2" for="order-select">
         Order By:
       </label>
       
-      <select class="form-control me-sm-2" name="order" id="order-select">
+      <select id="order-select" class="form-control me-sm-2" name="order">
         {% for field in order_fields %}
           <option id="{{ field }}-sort-option" 
             value="{{ field }}" 
@@ -62,6 +59,7 @@ Jokes
     </form>
   </div>
 
+  <!-- add-joke-btn -->
   <div class="col-12 col-md-2 col-lg-3 text-end">
     <a id="add-joke-btn" class="btn btn-success btn-sm m-2" href="{% url 'jokes:create' %}">
       + New Joke
@@ -69,33 +67,45 @@ Jokes
   </div>
 </div>
 
-
 <div class="table-responsive">
   <table id="jokes-list-tbl-page-{{ page_obj.number }}" class="table table-striped" style="min-width: 500px">
     <thead>
       {% with order=request.GET.order dir=request.GET.direction %}
         <tr>
           {% if order == 'joke' and dir == 'asc' %}
-            <th><a href="?order=joke&direction=desc">Joke Set-Up</a></th>
+            <th>
+              <a href="?order=joke&direction=desc&search_qry={{ request.GET.search_qry }}">Joke Set-Up</a>
+            </th>
           {% else %}
-            <th><a href="?order=joke&direction=asc">Joke Set-Up</a></th>
+            <th>
+              <a href="?order=joke&direction=asc&search_qry={{ request.GET.search_qry }}">Joke Set-Up</a>
+            </th>
           {% endif %}
           
           {% if order == 'category' and dir == 'asc' %}
-            <th><a href="?order=category&direction=desc">Category/Tags</a></th>
+            <th>
+              <a href="?order=category&direction=desc&search_qry={{ request.GET.search_qry }}">Category/Tags</a>
+            </th>
           {% else %}
-            <th><a href="?order=category&direction=asc">Category/Tags</a></th>
+            <th>
+              <a href="?order=category&direction=asc&search_qry={{ request.GET.search_qry }}">Category/Tags</a>
+            </th>
           {% endif %}
 
           {% if joke and joke.user == user %}
             <th>Actions</th>
           {% else %}
             {% if order == 'creator' and dir == 'asc' %}
-              <th><a href="?order=creator&direction=desc">Created</a></th>
+              <th>
+                <a href="?order=creator&direction=desc&search_qry={{ request.GET.search_qry }}">Created</a>
+              </th>
             {% else %}
-              <th><a href="?order=creator&direction=asc">Created</a></th>
+              <th>
+                <a href="?order=creator&direction=asc&search_qry={{ request.GET.search_qry }}">Created</a>
+              </th>
             {% endif %}
           {% endif %}
+          <th>Rating (out of 10)</th>
         </tr>
       {% endwith %}
     </thead>
@@ -107,38 +117,80 @@ Jokes
           <a id="joke-{{joke.id}}" href="{{ joke.get_absolute_url }}">{{ joke.question }}</a>
         </td>
         <td>
-          <span id="joke-{{joke.id}}-category">{{ joke.category.category }}</span>
+          <a id="category-joke-{{joke.id}}" 
+            href="{% url 'jokes:category' joke.category.slug %}?order={{ order }}&direction={{ direction }}">
+            {{ joke.category.category }}</a>
           <br />
           {% for tag in joke.tags.all %}
-            <span id="joke-{{joke.id}}-tag-{{tag.id}}" 
-              class="badge rounded-pill bg-secondary">{{ tag.tag }}</span>
+            <a id="tag-{{tag.id}}-joke-{{joke.id}}"
+              href="{% url 'jokes:tag' tag.slug %}?order={{ order }}&direction={{ direction }}" 
+              class="badge rounded-pill bg-secondary">{{ tag.tag }}</a>
           {% endfor %}
         </td>
         {% if joke.user == user %}
-          <td id="edit-cell">
-            <a id="update-joke-{{joke.id}}-btn" href="{% url 'jokes:update' joke.slug %}" 
+          <td id="edit-cell-joke-{{joke.id}}">
+            <a id="update-btn-joke-{{joke.id}}" href="{% url 'jokes:update' joke.slug %}" 
               name="Update" alt="Update joke">
               <i class="fas fa-pencil-alt"></i>
             </a>
             &nbsp;
-            <a id="delete-joke-{{joke.id}}-btn" href="{% url 'jokes:delete' joke.slug %}" 
+            <a id="delete-btn-joke-{{joke.id}}" href="{% url 'jokes:delete' joke.slug %}" 
               name="Delete" alt="Delete joke">
               <i class="far fa-trash-alt"></i>
             </a>
           </td>
         {% else %}
-          <td id="created-cell">
-            <span id="joke-{{joke.id}}-createdby"><span class="createdby-label">By:</span> 
-            {{ joke.user.username }}</span>
+          <td id="created-cell-joke-{{joke.id}}">
+            <span class="createdby-label">By:</span> 
+            <a id="createdby-joke-{{joke.id}}"
+              href="{% url 'jokes:creator' joke.user.username %}?order={{ order }}&direction={{ direction }}">
+              {{ joke.user.username }}</a>
             <br />
-            <span id="joke-{{joke.id}}-created"><span class="createdby-label">On:</span> 
+            <span id="created-joke-{{joke.id}}"><span class="createdby-label">On:</span> 
             {{ joke.created|date:'SHORT_DATE_FORMAT' }}</span>
             <br />
-            <span id="joke-{{joke.id}}-updated"><span class="createdby-label">Updated:</span><br/> 
+            <span id="updated-joke-{{joke.id}}"><span class="createdby-label">Updated:</span><br/> 
             {{ joke.updated|date:'SHORT_DATE_FORMAT' }}</span>
           </td>
         {% endif %}
+
+        {% with votes=joke.votes %}
+          {% if votes.num_votes == 0 %}
+            <td>
+              <p id="rating-container-joke-{{joke.id}}" class="no-votes-yet">
+                No rating yet!<br />
+                Click the joke's set-up<br /> 
+                to be the first to vote. :)
+              </p>
+            </td>
+          {% else %}
+            <td>
+              <div id="rating-container-joke-{{joke.id}}" class="rating-container">
+                <div id="rating-div-joke-{{joke.id}}" class="rating-div" 
+                  title="Joke rating out of 10 = {{ votes.rating }}"> 
+                  <!-- `widthratio` NO WORKY!!! NEVER WORKS! -->
+                  <!-- <div id="rating" style="width:{% widthratio joke.rating 10 100 %}%;"></div> -->
+                  <div id="rating-bar-joke-{{joke.id}}" 
+                    class="rating-bar" 
+                    style="--rating-width: {{ joke.rating_width }}%;"></div>
+                </div>
+                <div id="rating-joke-{{joke.id}}" class="rating">
+                  {{ votes.rating }} 
+                </div>
+              </div>
+              <div id="num-votes-joke-{{joke.id}}" class="num-votes">
+                ({{ votes.likes }}<i class="fas fa-thumbs-up text-success mx-1"></i> and
+                {{ votes.dislikes }}<i class="fas fa-thumbs-down text-danger mx-1"></i>)
+              </div>
+            </td>
+          {% endif %}
+        {% endwith %}
       </tr>
+
+      {% empty %}
+        <tr>
+          <td colspan="3">No jokes found!</td>
+        </tr>
       {% endfor %}
     </tbody>
 

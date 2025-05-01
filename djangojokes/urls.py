@@ -28,6 +28,13 @@ urlpatterns = [
 ## IN future, go thru free AWS S3 training on their site and see if you can figure it out.
 
 
+if (settings.DEBUG):
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+
+
 ## I want to keep these notes.
 """
 URL configuration for djangojokes project.
