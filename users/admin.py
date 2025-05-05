@@ -64,6 +64,7 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
             'admin:auth_user_password_change', 
             args=[user_obj.pk]
         )
+        ## You must call `mark_safe()` when rendering/outputting html to the web page
         return mark_safe(f'<a href="{url}">Change Password</a>')
 
 
