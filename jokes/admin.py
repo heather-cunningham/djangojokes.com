@@ -30,6 +30,9 @@ class JokeAdmin(DjangoJokesAdmin):
     model = Joke
     ## Admin fields
     date_hierarchy = 'updated'
+    ## These Lists can be Lists or Tuples.  But if you use a Tuple, you must include
+    ## a TRAILING COMMA.  Otherwise, it'll compile to just a String in parentheses and the error:
+    #### "(admin.E031) The value of 'ordering' must be a list or tuple."
     list_display = ['question', 'created', 'updated', 'category'] ## These can't be many:many fields
     list_filter = ['updated', 'category', 'tags']
     ordering = ['-updated'] ## Default to ordering by updated DESC
