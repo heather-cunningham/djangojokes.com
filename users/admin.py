@@ -1,3 +1,7 @@
+## Some third-party apps installed, register by default (so they show up in Django admin) some unused models. 
+# For ex, `django-allauth` inclds apps we're not using for authenticating w/ social accounts.
+# These apps may be unregistered using the admin.site.unregister() method (since we're not using them):
+from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 from common.admin import DjangoJokesAdmin
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -117,3 +121,10 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
     #     ),## end inner tple
     # )## end outer tple
 ## END CustomUser model Class
+
+
+## Unregistering default apps we're not using from `django-allauth`:
+## (These apps are incld by default w/ `django-allauth`.) 
+admin.site.unregister(SocialApp)
+admin.site.unregister(SocialAccount)
+admin.site.unregister(SocialToken)
