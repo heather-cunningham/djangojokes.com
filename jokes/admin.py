@@ -46,8 +46,12 @@ class JokeAdmin(DjangoJokesAdmin):
     ## @override
     def get_readonly_fields(self, request, obj=None):
         if(obj): 
-            return ('slug', 'created', 'updated')
-        return ()    
+            return ('slug', 'created', 'updated', 'vote_summary', )
+        return ()
+
+
+    def vote_summary(self, joke_obj):
+        return f'Votes: {joke_obj.num_votes}, Rating: {joke_obj.rating}'
 ## END class JokeAdmin()
 
 
