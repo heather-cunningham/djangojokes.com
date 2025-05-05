@@ -23,4 +23,9 @@ class CustomUser(AbstractUser):
 
     def get_absolute_url(self):
         return reverse('my-account')
+    
+
+    def __str__(self):
+        """ to_string() used to populate the User dropdown in the Joke Admin edit form. """
+        return f'{self.first_name} {self.last_name} ({self.username})'
 ## END class/model

@@ -26,7 +26,15 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
     ##### list_display = UserAdmin.list_display + ('is_superuser',)
     #
     ## If you try to append a list, you will get a TypeError:
-    #### TypeError: can only concatenate tuple (not "list") to tuple   
+    #### TypeError: can only concatenate tuple (not "list") to tuple
+    # 
+    # For JokeAdmin class': autocomplete_fields = ['tags', 'user']:
+    ## YOu do not need to add here:
+    ##### `search_fields = ["user"]`
+    ## ... Because this class, here, the class it inherits from (django.contrib.auth.admin.UserAdmin), 
+    # which already defines search_fields as:
+    #### `search_fields = ('username', 'first_name', 'last_name', 'email')`
+    ## So, you don't have to add it again.        
 
 
     add_fieldsets = UserAdmin.add_fieldsets + (
@@ -38,5 +46,4 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
             }
         ),## end inner tple
     )## end outer tple
-
 ## END CustomUser model Class

@@ -37,6 +37,10 @@ class JokeAdmin(DjangoJokesAdmin):
     list_filter = ['updated', 'category', 'tags']
     ordering = ['-updated'] ## Default to ordering by updated DESC
     search_fields = ['question', 'answer']
+    ## Admin form fields
+    autocomplete_fields = ['tags', 'user']
+    #### Change the Category form field to Radio btns:
+    radio_fields = { 'category': admin.HORIZONTAL } 
 
 
     ## @override
@@ -66,7 +70,10 @@ class JokeVoteAdmin(DjangoJokesAdmin):
 class TagAdmin(DjangoJokesAdmin):
     # class TagAdmin(admin.ModelAdmin):
     model = Joke
+    ## Admin fields
     list_display = ['tag', 'created', 'updated']
+    #### Req'd in order to add 'tags' to the autocomplete_fields in JokeAdmin:
+    search_fields = ['tag']
 
 
     ## @override
