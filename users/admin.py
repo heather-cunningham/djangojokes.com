@@ -53,6 +53,17 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
                                               optional_new_user_fields)
 
 
+
+    ## The get_form() method of the ModelAdmin class gets the form used in both
+    #  the add_view and the change_view. You can override this method to conditionally
+    #  change the value of save_on_top for the btns (i.e., save btns):
+    ## @override
+    def get_form(self, request, obj=None, **kwargs):
+        self.save_on_top = obj is not None ## Sets save_on_top to True when obj exists,
+        ## and to False when it does not.
+        return super().get_form(request, obj, **kwargs)
+
+
     ## When inheriting from a class, like this one does from `UserAdmin`,  
     # you may append to the superclass’s class attributes. 
     # BUT to do so correctly, you must know whether the
