@@ -6,3 +6,11 @@ from django.contrib import admin
 admin.site.index_title = "Home" # index.html / Homepage
 admin.site.site_title = "Django Jokes Admin"
 admin.site.site_header = "Django Jokes Admin"
+
+
+## Set some of the other ModelAdmin classes, in the other apps' admin's, 
+# to inherit from this class.
+#### Remember, in Django, almost everything is an app.    
+class DjangoJokesAdmin(admin.ModelAdmin):
+    list_per_page = 25
+    list_max_show_all = 600
