@@ -58,7 +58,10 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
     #  the add_view and the change_view. You can override this method to conditionally
     #  change the value of save_on_top for the btns (i.e., save btns):
     ## @override
-    def get_form(self, request, obj=None, **kwargs):
+    def get_form(self, request, obj=None, **kwargs): # `obj` == The User obj
+        ## Therefore, if the User obj is not None, must be editing an existing User,
+        # rather than creating a New User (wherein that new user_obj would be None at this point
+        # b/c the user doesn't exist yet).
         self.save_on_top = obj is not None ## Sets save_on_top to True when obj exists,
         ## and to False when it does not.
         return super().get_form(request, obj, **kwargs)
