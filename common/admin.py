@@ -14,3 +14,6 @@ admin.site.site_header = "Django Jokes Admin"
 class DjangoJokesAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_max_show_all = 600
+    ## Replaces the `Save and Add Another` btn [in Admin] 
+    # with a `Save as New` btn.
+    save_as = True
