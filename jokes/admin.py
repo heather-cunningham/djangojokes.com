@@ -6,7 +6,9 @@ from .models import Category, Joke, JokeVote, Tag
 # Register your models in the db here.
 ## BEGIN class
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(DjangoJokesAdmin):
+    ## Using custom admin settings, set in the common app, instead of:
+    # class CategoryAdmin(admin.ModelAdmin):
     model = Category
     list_display = ['category', 'created', 'updated']
 
@@ -26,7 +28,12 @@ class JokeAdmin(DjangoJokesAdmin):
     ## Using custom admin settings, set in the common app, instead of:
     # class JokeAdmin(admin.ModelAdmin):  
     model = Joke
-    list_display = ['question', 'created', 'updated']
+    ## Admin fields
+    date_hierarchy = 'updated'
+    list_display = ['question', 'created', 'updated', 'category'] ## These can't be many:many fields
+    list_filter = ['updated', 'category', 'tags']
+    ordering = ['-updated'] ## Default to ordering by updated DESC
+    search_fields = ['question', 'answer']
 
 
     ## @override
@@ -39,7 +46,8 @@ class JokeAdmin(DjangoJokesAdmin):
 
 ## BEGIN class
 @admin.register(JokeVote)
-class JokeVoteAdmin(admin.ModelAdmin):
+class JokeVoteAdmin(DjangoJokesAdmin):
+    # class JokeVoteAdmin(admin.ModelAdmin):
     model = JokeVote
     list_display = ['joke', 'user', 'vote']
 
@@ -52,7 +60,8 @@ class JokeVoteAdmin(admin.ModelAdmin):
 
 ## BEGIN class
 @admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(DjangoJokesAdmin):
+    # class TagAdmin(admin.ModelAdmin):
     model = Joke
     list_display = ['tag', 'created', 'updated']
 
