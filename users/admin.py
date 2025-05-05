@@ -2,6 +2,8 @@ from common.admin import DjangoJokesAdmin
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from common.utils.admin import (append_fields_to_fieldset, move_fieldset_fields, 
                                 remove_fields_from_fieldset)
 
@@ -20,6 +22,7 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
     ## Be sure to add trailing commas here, so Python/Django knows these are not just Strings:
     list_display = UserAdmin.list_display + ('is_superuser', ) 
     list_display_links = ('username', 'email', 'first_name', 'last_name', )
+    readonly_fields = ['password_form']
     ## Add User fields to "Personal Info" heading in Django Admin for editing an existing user.
     new_personal_info_fields_to_add = ('dob', 'avatar', )
     #### New Users
@@ -32,7 +35,7 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
 
     #### Existing User
     #------------------
-    ## Add, move, remove Admin fields: "Personal info"
+    ## Add, move, remove Admin fields: No-heading and "Personal info"
     # Add
     append_fields_to_fieldset(UserAdmin.fieldsets, "Personal info", new_personal_info_fields_to_add)
     # Move the `email` field from "Personal info" fieldset to the unlabelled (no heading) fieldset
@@ -41,6 +44,8 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
     # Remove password field from the (no heading) fieldset, since it takes up a lot of space
     #  and only links to the 'Reset Password' button.
     remove_fields_from_fieldset(UserAdmin.fieldsets, None, ('password', ))
+    ## Add:
+    append_fields_to_fieldset(UserAdmin.fieldsets, None, ('password_form', ), )
 
 
     #### New Users
@@ -52,6 +57,14 @@ class CustomUserAdmin(DjangoJokesAdmin, UserAdmin):
     add_fieldsets = append_fields_to_fieldset(UserAdmin.add_fieldsets, 'Optional Fields', 
                                               optional_new_user_fields)
 
+    ## add_change_password_link or form
+    def password_form(self, user_obj):  ## Meth name must match the field name added to readonly_fields above.
+        url = reverse(
+            ## Named URL pattern of the password-change form used by the UserAdmin class.
+            'admin:auth_user_password_change', 
+            args=[user_obj.pk]
+        )
+        return mark_safe(f'<a href="{url}">Change Password</a>')
 
 
     ## The get_form() method of the ModelAdmin class gets the form used in both
