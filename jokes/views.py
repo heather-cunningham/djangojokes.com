@@ -194,7 +194,7 @@ class JokeListView(ListView):
         ## Slice all but the last order key, which is 'default'
         context['order_fields'] = list(order_fields.keys())[:-1]
         return context
-## END class
+## END class JokeListView
 
 
 ## BEGIN
